@@ -4,11 +4,11 @@ Group members:
 
 Owen Adams - Repo Owner, username: OwenAdams2023
 
-Nisha Adhikari - Collaborator, username: 
+Nisha Adhikari - Collaborator, username: nishaadh
 
-Destiny Milsap - Collaborator, username:
+Destiny Milsap - Collaborator, username: dmilsap
 
-Alison Ho - Collaborator, username:
+Alison Ho - Collaborator, username: Arh3825
 
 Project Description:
   Sneak Peek is a secure, e-commerce website application that allows buyers to purchase shoes from authorized sellers. The website has a shopping cart for buyers, and 
