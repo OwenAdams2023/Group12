@@ -1,9 +1,13 @@
 # Group12
 
-Group members-
+Group members:
+
 Owen Adams - Repo Owner, username: OwenAdams2023
+
 Nisha Adhikari - Collaborator, username: 
+
 Destiny Milsap - Collaborator, username:
+
 Alison Ho - Collaborator, username:
 
 Project Description:
