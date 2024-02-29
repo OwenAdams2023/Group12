@@ -2,6 +2,7 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
 def home(request):
@@ -31,9 +32,28 @@ def register(request):
     return render(request, "sneakpeekapp/register.html")
 
 def login(request):
+    if request.method == 'POST':
+        username= request.POST['username']
+        passw = request.POST['passww']
+
+        user= authenticate(username=username, password=passw)
+        if user is not None:
+            login(request,user)
+            first_name= user.first_name
+            return redirect('home')
+        #if information is incorrect redirect back to the login page 
+        else:
+            messsage.error(request, "Login information incorrect")
+            return redirect('login') 
+
     return render(request, "sneakpeekapp/login.html")
 
+
 def logout(request):
-    pass
+    logout(request)
+    messages.success(request, "Logged Out")
+    return  redirect('home')
+
+
 
 
