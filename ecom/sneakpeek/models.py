@@ -6,7 +6,7 @@ from django.db.models.signals import post_save
 # Create your models here.
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    date_modified = models.DateTimeField(User, auto_now=True)
+    date_modified = models.DateTimeField(auto_now=True)
     phone = models.CharField(max_length=50, blank=True)
     address1 = models.CharField(max_length=200, blank=True)
     address2 = models.CharField(max_length=200, blank=True)
@@ -19,7 +19,7 @@ class UserProfile(models.Model):
         return self.user.username
 
 # Create user account by default when user signs up
-def create_profile(sender, instance, created, **kwards):
+def create_profile(sender, instance, created, **kwargs):
     if created:
         user_profile = UserProfile(user=instance)
         user_profile.save()
