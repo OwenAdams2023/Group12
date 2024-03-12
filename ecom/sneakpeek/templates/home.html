@@ -18,6 +18,13 @@
         <button type="submit"> <a href="register"> Register</a></button>
         <button type="submit"> <a href="login"> Login</a></button>
 
+        {% if user.is_authenticated %}
+            
+            <button type="submit"> <a href="logout"> Logout</a></button>
+            
+            <button type="submit"> <a href="add_product"> Add Products </a></button>
+        {% endif %}
+
         <script src="" async defer></script>
     </body>
 </html>

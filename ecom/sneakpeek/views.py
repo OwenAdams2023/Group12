@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from .forms import SignUpForm
+from .forms import SignUpForm, ProductForm
 from django import forms
 from .models import UserProfile
 
@@ -18,6 +19,7 @@ def register_user(request):
         phone_number = request.POST['phone']
         username = request.POST['username']
         password = request.POST['password']
+        account_type = request.POST['account_type']
 
         first_name = request.POST['first_name'] # can also use request.POST['first_name']
         last_name = request.POST['last_name']
@@ -29,30 +31,13 @@ def register_user(request):
 
         #saving phone number
         user.userprofile.phone = phone_number
+        user.userprofile.account_type = account_type
         user.userprofile.save()
 
         user = authenticate(username=username, password=password)
         login(request, user)
 
-
         return redirect('login')
-
-    """form = SignUpForm()
-    if request.method == "POST":       # get info when the user enters it and presses submit from register.html file
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password1']
-
-            user = authenticate(username=username, password=password1)
-            login(request, user)
-            messages.success(request ("Your registration is complete"))
-            return redirect('home')
-
-        else:
-            messages.success(request ("There was a problem. Please try again"))
-            return redirect('register')"""
 
     return render(request, 'register.html')
 
@@ -76,4 +61,19 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     messages.success(request, ("You have been logged out"))
-    return redirect('home')        
+    return redirect('home')    
+
+@login_required
+def add_product(request):
+    form = ProductForm()
+    if request.method == "POST":
+        form = ProductForm(request.POST)
+        if form.is_valid():
+            form.instance.seller = request.user
+            form.save()
+            return redirect('home')
+
+        else:
+            form = ProductForm()
+        
+    return render(request, 'add_product.html', {'form': form})

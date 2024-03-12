@@ -7,6 +7,7 @@ from django.db.models.signals import post_save
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     date_modified = models.DateTimeField(auto_now=True)
+    account_type = models.CharField(max_length=50, blank=True)
     phone = models.CharField(max_length=50, blank=True)
     address1 = models.CharField(max_length=200, blank=True)
     address2 = models.CharField(max_length=200, blank=True)
@@ -27,6 +28,7 @@ def create_profile(sender, instance, created, **kwargs):
 # Automate profile saving with every instance of User Created
 post_save.connect(create_profile, sender=User)
 
+#might not need this
 class Account(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -40,15 +42,18 @@ class Account(models.Model):
         return f'{self.first_name} {self.last_name}' 
 
 class Category(models.Model):
-    type = models.CharField(max_length=50)
+    product_type = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.type
+        return self.product_type
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
     price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+    quantity = models.IntegerField(default=1)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
+    seller = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    brand = models.CharField(max_length=100, null=True)
     description = models.CharField(max_length=250, default='', blank=True, null=True)
     image = models.ImageField(upload_to='uploads/product/')
 
