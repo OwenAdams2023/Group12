@@ -6,18 +6,25 @@ from django.contrib.auth.models import User
 # Register your models here.
 admin.site.register(Category)
 admin.site.register(Account)
-admin.site.register(Product)
 admin.site.register(Order)
 admin.site.register(UserProfile)
+
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ("name", "price", "quantity", "seller", "brand")
+admin.site.register(Product, ProductAdmin)
 
 #Mix profile info and user info
 class ProfileInline(admin.StackedInline):
     model = UserProfile
+    can_delete = False
+    fk_name = 'user'
 
 class UserAdmin(admin.ModelAdmin):
     model = User
-    field = ["username", "first_name", "last_name", "email"]
-    inlines = [ProfileInline]
+    field = ("username", "first_name", "last_name", "email")
+    inlines = (ProfileInline, )
+    list_display = ("username", "first_name", "last_name", "email", "is_staff")
+    #list_select_related = ('userprofile', )
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)

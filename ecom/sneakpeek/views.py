@@ -10,6 +10,13 @@ from .models import UserProfile
 
 # Create your views here.
 def home(request):
+
+    if request.user.is_authenticated:
+        current_user = request.user
+        is_seller = current_user.userprofile.account_type == 'Seller'
+        context = {'is_seller': is_seller}
+        return render(request, "home.html", context)
+
     return render(request, "home.html")
 
 def register_user(request):
@@ -19,7 +26,7 @@ def register_user(request):
         phone_number = request.POST['phone']
         username = request.POST['username']
         password = request.POST['password']
-        account_type = request.POST['account_type']
+        user_type = request.POST['account_type']
 
         first_name = request.POST['first_name'] # can also use request.POST['first_name']
         last_name = request.POST['last_name']
@@ -67,7 +74,7 @@ def logout_user(request):
 def add_product(request):
     form = ProductForm()
     if request.method == "POST":
-        form = ProductForm(request.POST)
+        form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             form.instance.seller = request.user
             form.save()
