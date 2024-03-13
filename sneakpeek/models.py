@@ -14,6 +14,7 @@ class UserProfile(models.Model):
     state = models.CharField(max_length=50, blank=True)
     zipcode = models.CharField(max_length=50, blank=True)
     country = models.CharField(max_length=50, blank=True)
+    old_cart= models.CharField(max_length=50, blank=True,null=True)
 
     def __str__(self):
         return self.user.username
@@ -39,11 +40,6 @@ class Account(models.Model):
     def __str__(self):
         return f'{self.first_name} {self.last_name}' 
 
-class Category(models.Model):
-    type = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.type
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
@@ -77,3 +73,20 @@ class Category(models.Model):
     
     class Meta:
         verbose_name_plural = 'categories'
+
+class ShippingAddress(models.Model):
+    user = models.ForeignKey(User, on_delete = models.CASCADE, null=True, blank=True)
+    full_name = models.CharField(max_length= 255)
+    email = models.CharField(max_length= 255)
+    address1 = models.CharField(max_length= 255)
+    address2 = models.CharField(max_length= 255)
+    city = models.CharField(max_length= 255)
+    state = models.CharField(max_length= 255, null=True, blank=True)
+    zipcode = models.CharField(max_length= 255, null=True, blank=True)
+    country = models.CharField(max_length= 255)
+    
+    class Meta:
+        verbose_name_plural = "Shipping Address"
+    
+    def __str__self(self):
+        return f'Shipping Adress - {str(self.id)}'

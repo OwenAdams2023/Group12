@@ -3,11 +3,20 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Category, Product
+from .models import Category, Product, UserProfile
 from .forms import SignUpForm
 from django import forms
+import json
+from cart.cart import Cart 
 
 # Create your views here.
+
+def category_summary(request):
+    categorites = Category.objects.all()
+
+    return render(request, 'category_summary.html', {"categories": categorites})
+
+
 
 def category(request,foo):
     foo = foo.replace("-",' ')
@@ -71,6 +80,15 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            # shopping cart 
+            current_user = UserProfile.objects.get(user__id = request.user_id)
+            saved_cart = current_user.old_cart
+            if saved_cart:
+                converted_cart = json.loads(saved_cart)
+                cart = Cart(request)
+                for key,value in converted_cart.items():
+                    cart.db_add(product=key, quantity= value)
+
             messages.success(request, ("You have been logged in"))
             return redirect('home')
         
@@ -84,3 +102,7 @@ def logout_user(request):
     logout(request)
     messages.success(request, ("You have been logged out"))
     return redirect('home',{})        
+
+def payment_success(request):
+    return render(request, "payment_success.html,{}")
+
