@@ -56,7 +56,7 @@
 </head>
 <!--Need to add id for username need to add id for name, and -->
 <body>
-    <form action="register" method="post">
+    <form action="{% url 'register' %}" method="post">
     {% csrf_token %}
 
         <h1>Create Account</h1>

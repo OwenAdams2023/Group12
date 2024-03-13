@@ -50,7 +50,7 @@
 
 <div class="login-container">
     <h2>Login</h2>
-    <form action="login" method="post">
+    <form action="{% url 'login' %}" method="post">
     {% csrf_token %}
         <div class="form-input">
             <label for="username">Username</label>

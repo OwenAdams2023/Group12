@@ -10,7 +10,7 @@
     <body>
         <h3>Add New Products</h3>
 
-        <form method="POST" action="add_product" enctype="multipart/form-data">
+        <form method="POST" action="{% url 'add_product' %}" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit">Add Product</button>

@@ -26,7 +26,7 @@ def register_user(request):
         phone_number = request.POST['phone']
         username = request.POST['username']
         password = request.POST['password']
-        user_type = request.POST['account_type']
+        account_type = request.POST['account_type']
 
         first_name = request.POST['first_name'] # can also use request.POST['first_name']
         last_name = request.POST['last_name']
@@ -56,6 +56,9 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+
+            #shopping cart stuff
+            #current_user = UserProfile.objects.get(user__id = request.user_id)
             messages.success(request, ("You have been logged in"))
             return redirect('home')
         
@@ -63,7 +66,7 @@ def login_user(request):
             messages.success(request, ("There was an error. Please log in again"))
             return redirect('login')
         
-    return render(request, 'login.html')     
+    return render(request, 'login.html', {})     
 
 def logout_user(request):
     logout(request)
