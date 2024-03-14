@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Account, Product, Order, UserProfile
+from .models import Category, Account, Product, Order, UserProfile, ShippingAddress
 from django.contrib.auth.models import User
 
 
@@ -8,6 +8,7 @@ admin.site.register(Category)
 admin.site.register(Account)
 admin.site.register(Order)
 admin.site.register(UserProfile)
+admin.site.register(ShippingAddress)
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ("name", "price", "quantity", "seller", "brand")

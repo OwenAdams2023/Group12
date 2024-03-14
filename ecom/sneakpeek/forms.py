@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .models import Product
+from .models import Product, ShippingAddress
 
 class SignUpForm(UserCreationForm):
 	email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email Address'}))
@@ -31,8 +31,19 @@ class SignUpForm(UserCreationForm):
 		self.fields['password2'].label = ''
 		self.fields['password2'].help_text = '<span class="form-text text-muted"><small>Enter the same password as before, for verification.</small></span>'
 
+#needs changes and testing
 class ProductForm(forms.ModelForm):
 	
 	class Meta:
 		model = Product
 		fields = ('name', 'price', 'quantity', 'category', 'brand', 'image', 'description')
+
+
+#need to complete
+class ShippingForm(forms.ModelForm):
+
+	class Meta:
+		model = ShippingAddress
+		fields = ('shipping_full_name', 'shipping_email', 'shipping_address1', 'shipping_address2', 'shipping_city', 'shipping_state', 'shipping_zipcode', 'shipping_country')
+
+		exclude = ('user', )
