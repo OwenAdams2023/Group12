@@ -106,3 +106,49 @@ def logout_user(request):
 def payment_success(request):
     return render(request, "payment_success.html,{}")
 
+def checkout(request):
+    current_user = UserProfile.objects.get(user__id = request.user_id)
+    cart = Cart(request)
+    totals = cart.cart_total()
+    if request.method == "POST": 
+        order_form = OrderForm(request.POST)
+        address_form = ShippingAddressForm(request.POST)
+        if order_form.is_valid() and address_form.is_valid():
+            order = order_form.save(commit=False)
+            order.customer = current_user
+            order.save()
+            address = address_form.save(commit=False)
+            address_form.user = current_user
+            address.save()
+
+            order.products.add(*cart)
+            request.session['cart']= []
+            return redirect('order_success')
+        else:
+            order_form = OrderForm(initial={'prducts':cart_items})
+            address_form = ShippingAddressForm()
+            return render(request, "checkout.html", {'order_form': order_form, 'address_form': address_form})
+
+def return_request(request, order_id):
+    order= Order.objects.get(id=order_id)
+    if request.method == 'POST':
+        form = ReturnForm(request.POST)
+        if form.is_valid():
+            return_request = form.save(commit=False)
+            return_request.order = order
+            return_request.save()
+            return redirect('return_request_success')
+        else:
+            form = ReturnForm()
+        return render(request, 'return_request.html'{'form':form, 'order':order})
+    
+    def return_request_success(request):
+        return render(request, 'return_request_success.html')
+
+
+
+
+
+
+
+

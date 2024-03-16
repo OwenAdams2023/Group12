@@ -19,6 +19,7 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
 
+
 # Create user account by default when user signs up
 def create_profile(sender, instance, created, **kwards):
     if created:
@@ -44,7 +45,7 @@ class Account(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=100)
     price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
-    # Category = models.ForeignKey('sneakpeek.Category', on_delete=models.CASCADE, default=1)
+    Category = models.ForeignKey('sneakpeek.Category', on_delete=models.CASCADE, default=1)
     description = models.CharField(max_length=250, default='', blank=True, null=True)
     image = models.ImageField(upload_to='uploads/product/')
     is_sale = models.BooleanField(default=False)
@@ -90,3 +91,12 @@ class ShippingAddress(models.Model):
     
     def __str__self(self):
         return f'Shipping Adress - {str(self.id)}'
+
+
+class ReturnRequest(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    reason = models.TextField()
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Return Request for Order {self.order.id}'
