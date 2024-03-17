@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seller Account Dashboard</title>
+<style>
+  body { 
+    font-family: Arial, 
+    sans-serif; 
+    background-color: #f0f0f079;
+}
+  .container { 
+    width: 40%; 
+    margin: auto;
+}
+  .dashboard-header { 
+    text-align: center; 
+    padding: 20px; 
+}
+  .section { margin-top: 50px; 
+    background-color: white;
+}
+  .section-header { 
+    text-align: center; 
+    font-size: 24px; 
+    color: white; 
+    margin-bottom: 10px; 
+    background-color: #0056b3; 
+    border-radius: 10px;
+}
+  .item { 
+    display: flex; 
+    justify-content: space-between; 
+    padding: 30px; 
+    border: 1px solid #ddd; 
+    border-radius: 5px; 
+    margin-bottom: 10px; 
+}
+  .earnings { 
+    padding: 30px; 
+    border: 1px solid #ddd; 
+    border-radius: 5px; 
+    margin-bottom: 10px; 
+}
+  .edit-button {
+     padding: 8px 16px; 
+     font-size: 16px; 
+     color: #6a9fd8; 
+     border: none; 
+     border-radius: 5px; 
+     cursor: pointer; 
+     margin-top: 2px; 
+     margin-left: 250px;
+    }
+  .edit-button:hover { 
+    background-color: #225285
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="dashboard-header">
+    <h1>Seller Account Dashboard</h1>
+  </div>
+
+  <div class="section items-list">
+    <div class="section-header">Your Products</div>
+    <div class="item"><span>Item 1</span> <span>$100</span></div>
+    <div class="item"><span>Item 2</span> <span>$150</span></div>
+    <div class="item"><span>Item 3</span> <span>$200</span></div>
+  </div>
+
+  <button type="Submit" class="edit-button">Edit Inventory</button>
+
+  <div class="section earnings-summary">
+    <div class="section-header">Your Earnings</div>
+    <div class="earnings">Total Earnings: $450</div>
+  </div>
+</div>
+
+</body>
+</html>
