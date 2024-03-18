@@ -8,6 +8,7 @@ from .forms import SignUpForm
 from django import forms
 import json
 from cart.cart import Cart 
+from django.db.models import Q
 
 # Create your views here.
 
@@ -140,12 +141,23 @@ def return_request(request, order_id):
             return redirect('return_request_success')
         else:
             form = ReturnForm()
-        return render(request, 'return_request.html'{'form':form, 'order':order})
+        return render(request, 'return_request.html',{'form':form, 'order':order})
     
-    def return_request_success(request):
-        return render(request, 'return_request_success.html')
+def return_request_success(request):
+    return render(request, 'return_request_success.html')
 
 
+def search(request):
+    if request.method == "POST":
+        searched = request.POST['searched']
+        # seach regardless of case
+        searched = Product.objects.filter(Q(name__icontains=searched) | Q(description__icontains=searched))
+        if not searched:
+             messages.success(request, ("Your item can not be found... Please Try Again "))
+             return render(request, "search.html",{})
+        return render(request, "search.html",{'searched':searched})
+    else:
+        return render(request, "search.html",{})
 
 
 
