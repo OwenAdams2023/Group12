@@ -38,15 +38,15 @@ class Cart():
             current_user.update(old_cart= str(cart_string))
 
 
-    def add(self,product,quantity):
+    def add(self,product): #,quantity):
         product_id = str(product.id)
-        product_qty = str(quantity)
+        #product_qty = str(quantity)
 
         if product_id in self.cart:
             pass
         else:
-            #self.cart[product_id]= {'price': str(product.price)}
-            self.cart[product_id]= int(product_qty)
+            self.cart[product_id]= {'price': str(product.price)}
+            #self.cart[product_id]= int(product_qty)
 
         self.session.modified = True
 
