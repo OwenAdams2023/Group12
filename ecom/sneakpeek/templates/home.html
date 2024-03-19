@@ -15,8 +15,19 @@
     <body>
         <h3>Welcome to you favourite shopping store SneakPeek</h3>
 
-        <button type="submit"> <a href="register"> Register</a></button>
-        <button type="submit"> <a href="login"> Login</a></button>
+        {% if user.is_authenticated %}           
+            <button type="submit"> <a href="{% url 'logout' %}"> Logout </a></button>
+            <button type="submit"> <a href="{% url 'cart_summary' %}"> Cart </a></button>
+
+            {% if is_seller %}
+            <button type="submit"> <a href="{% url 'add_product' %}"> Add Products </a></button>
+            {% endif %}
+
+        {% else %}
+            <button type="submit"> <a href="{% url 'register' %}"> Register</a></button>
+            <button type="submit"> <a href="{% url 'login' %}"> Login</a></button>  
+
+        {% endif %}
 
         <script src="" async defer></script>
     </body>

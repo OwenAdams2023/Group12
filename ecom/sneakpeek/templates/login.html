@@ -50,7 +50,8 @@
 
 <div class="login-container">
     <h2>Login</h2>
-    <form action="/path-to-your-authentication-endpoint" method="post">
+    <form action="{% url 'login' %}" method="post">
+    {% csrf_token %}
         <div class="form-input">
             <label for="username">Username</label>
             <input type="text" id="username" name="username" required>
