@@ -135,3 +135,20 @@ def add_product(request):
 
 def payment_success(request):
     return render(request, "payment_success.html,{}")
+
+def update_user(request):
+    if request.user.is_authenticated:
+        current_user = User.objects.get(id=request.user.id)
+        user_form = UpdateUserForm(request.POST or None, instance=current_user)
+
+        if user_form.is_valid():
+            user_form.save()
+
+            login(request,current_user)
+            messages.success(request, "Your information has been updated!")
+            return redirect('home')
+        return render(request, "update_user.html", {'user':user_form})
+    
+    else:
+         messages.success(request, "Please log in first before updating your account")
+         return redirect('home')
