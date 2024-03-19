@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shopping Cart</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+  }
+  .cart-container {
+    width: 80%;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .cart-header {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  .cart-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .cart-item img {
+    width: 100px;
+    border-radius: 5px;
+  }
+  .item-details {
+    flex-grow: 1;
+    padding: 0 20px;
+  }
+  .quantity-selector {
+    width: 50px;
+    padding: 5px;
+    margin-right: 10px;
+  }
+  .item-price, .cart-total {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .checkout-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #25348a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    margin-top: 20px;
+  }
+  .checkout-button:hover {
+    background-color: #8d91a7;
+  }
+</style>
+</head>
+<body>
+
+<div class="cart-container">
+  <div class="cart-header">Your Shopping Cart</div>
+  
+  <div class="cart-item">
+    <img src="item-photo-url.jpg" alt="Item Name">
+    <div class="item-details">Item Name</div>
+    <input type="number" value="1" class="quantity-selector">
+    <div class="item-price">$19.99</div>
+  </div>
+  
+  <!-- Repeat for each item in the cart -->
+  
+  <div class="cart-total">Total: $19.99</div>
+  <button class="checkout-button">Checkout</button>
+</div>
+
+</body>
+</html>
