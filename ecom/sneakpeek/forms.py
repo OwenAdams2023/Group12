@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Order, ShippingAddress, ReturnRequest
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from .models import Product, ShippingAddress
@@ -49,3 +49,40 @@ class ShippingForm(forms.ModelForm):
 		fields = ('shipping_full_name', 'shipping_email', 'shipping_address1', 'shipping_address2', 'shipping_city', 'shipping_state', 'shipping_zipcode', 'shipping_country')
 
 		exclude = ('user', )
+
+class ShippingAddressForm(forms.ModelForm):
+    class Meta:
+        model = ShippingAddress
+        fields = ['full_name', 'email', 'address1', 'address2', 'city', 'state', 'zipcode', 'country']
+
+    def __init__(self, *args, **kwargs):
+        super(ShippingAddressForm, self).__init__(*args, **kwargs)
+        self.fields['user'].widget = forms.HiddenInput()  # Assuming you don't want the user to modify this field
+        
+        # Conditionally set fields as required
+        if self.instance and self.instance.user:
+            self.fields['email'].required = True
+            self.fields['address1'].required = True
+            self.fields['city'].required = True
+            self.fields['state'].required = True
+            self.fields['zipcode'].required = True
+            self.fields['country'].required = True
+
+class OrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ['product', 'quantity', 'address', 'phone',]
+
+    def __init__(self, *args, **kwargs):
+        super(OrderForm, self).__init__(*args, **kwargs)
+        self.fields['product'].widget.attrs['readonly'] = True  # Assuming product should not be editable in the form
+        self.fields['address'].required = True
+        self.fields['phone'].required = True
+        self.fields['card_number'].required = True
+        self.fields['cvv'].required = True
+        self.fields['expiration'].required = True
+	    
+class ReturnForm(forms.ModelForm):
+    class Meta:
+        model = ReturnRequest
+        fields = ['reason']
