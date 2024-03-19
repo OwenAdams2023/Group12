@@ -38,6 +38,8 @@ class ProductForm(forms.ModelForm):
 		model = Product
 		fields = ('name', 'price', 'quantity', 'category', 'brand', 'image', 'description')
 
+		exclude = ('seller', )
+
 
 #need to complete
 class ShippingForm(forms.ModelForm):

@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from .forms import SignUpForm, ProductForm
 from django import forms
-from .models import UserProfile, Category
+from .models import UserProfile, Category, Product
 import json
 from cart.cart import Cart
 
@@ -14,17 +14,25 @@ from cart.cart import Cart
 
 #need to make changes to home for adding product list
 def home(request):
+    
     if request.user.is_authenticated:
         current_user = request.user
         is_seller = current_user.userprofile.account_type == 'Seller'
-        context = {'is_seller': is_seller}
-        return render(request, "home.html", context)
+        #context = {'is_seller': is_seller}
+        #return render(request, "home1.html", context)
 
-    #products = Product.objects.all()
+    else:
+        is_seller = False
+
+    products = Product.objects.all()
     #return render(request, 'product.html',{'products':products})
 
-    return render(request, "home.html")
-    #return render(request, "home.html", {'products':product})
+    #return render(request, "home1.html")
+    return render(request, "home1.html", {'products':products, 'is_seller':is_seller})
+
+def search(request):
+
+    pass
 
 def register_user(request):
 
@@ -63,7 +71,7 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-
+            
             #reload the cart
             current_user = UserProfile.objects.get(user__id = request.user_id)
             saved_cart = current_user.old_cart
