@@ -4,11 +4,12 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from .forms import SignUpForm, ProductForm
+from .forms import SignUpForm, ProductForm, OrderForm, ShippingAddressForm, ReturnForm
 from django import forms
 from .models import UserProfile, Category, Product
 import json
 from cart.cart import Cart
+from django.db.models import Q
 
 # Create your views here.
 
@@ -32,7 +33,16 @@ def home(request):
 
 def search(request):
 
-    pass
+    if request.method == "POST":
+        searched = request.POST['searched']
+        # seach regardless of case
+        searched = Product.objects.filter(Q(name__icontains=searched) | Q(description__icontains=searched))
+        if not searched:
+             messages.success(request, ("Your item can not be found... Please Try Again "))
+             return render(request, "search.html",{})
+        return render(request, "search.html",{'searched':searched})
+    else:
+        return render(request, "search.html",{})
 
 def register_user(request):
 
@@ -133,5 +143,45 @@ def add_product(request):
         
     return render(request, 'add_product.html', {'form': form})
 
+def checkout(request):
+    current_user = UserProfile.objects.get(user__id = request.user_id)
+    cart = Cart(request)
+    totals = cart.cart_total()
+    if request.method == "POST": 
+        order_form = OrderForm(request.POST)
+        address_form = ShippingAddressForm(request.POST)
+        if order_form.is_valid() and address_form.is_valid():
+            order = order_form.save(commit=False)
+            order.customer = current_user
+            order.save()
+            address = address_form.save(commit=False)
+            address_form.user = current_user
+            address.save()
+
+            order.products.add(*cart)
+            request.session['cart']= []
+            return redirect('order_success')
+        else:
+            order_form = OrderForm(initial={'prducts':cart_items})
+            address_form = ShippingAddressForm()
+            return render(request, "checkout.html", {'order_form': order_form, 'address_form': address_form})
+
 def payment_success(request):
     return render(request, "payment_success.html,{}")
+
+def return_request(request, order_id):
+    order= Order.objects.get(id=order_id)
+    if request.method == 'POST':
+        form = ReturnForm(request.POST)
+        if form.is_valid():
+            return_request = form.save(commit=False)
+            return_request.order = order
+            return_request.save()
+            return redirect('return_request_success')
+        else:
+            form = ReturnForm()
+        return render(request, 'return_request.html',{'form':form, 'order':order})
+
+def return_request_success(request):
+    return render(request, 'return_request_success.html')
+
