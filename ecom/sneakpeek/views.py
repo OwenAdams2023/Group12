@@ -28,7 +28,7 @@ def home(request):
     #return render(request, 'product.html',{'products':products})
 
     #return render(request, "home1.html")
-    return render(request, "home1.html", {'products':products, 'is_seller':is_seller})
+    return render(request, "home.html", {'products':products, 'is_seller':is_seller})
 
 def search(request):
 
@@ -73,13 +73,14 @@ def login_user(request):
             login(request, user)
             
             #reload the cart
+            """
             current_user = UserProfile.objects.get(user__id = request.user_id)
             saved_cart = current_user.old_cart
             if saved_cart:
                 converted_cart = json.loads(saved_cart)
                 cart = Cart(request)
                 for key,value in converted_cart.items():
-                    cart.db_add(product=key, quantity= value)
+                    cart.db_add(product=key, quantity= value)"""
 
             messages.success(request, ("You have been logged in"))
             return redirect('home')
