@@ -65,13 +65,16 @@ class SignUpForm(UserCreationForm):
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['product', 'quantity', 'address', 'phone']
+        fields = ['product', 'quantity', 'address', 'phone',]
 
     def __init__(self, *args, **kwargs):
         super(OrderForm, self).__init__(*args, **kwargs)
         self.fields['product'].widget.attrs['readonly'] = True  # Assuming product should not be editable in the form
         self.fields['address'].required = True
         self.fields['phone'].required = True
+        self.fields['card_number'].required = True
+        self.fields['cvv'].required = True
+        self.fields['expiration'].required = True
 
 
 
@@ -89,10 +92,11 @@ class ShippingAddressForm(forms.ModelForm):
             self.fields['email'].required = True
             self.fields['address1'].required = True
             self.fields['city'].required = True
+            self.fields['state'].required = True
             self.fields['zipcode'].required = True
             self.fields['country'].required = True
 
-class ReturnRequestForm(forms.ModelForm):
+class ReturnForm(forms.ModelForm):
     class Meta:
         model = ReturnRequest
         fields = ['reason']

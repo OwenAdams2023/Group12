@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .models import Category, Product, UserProfile
-from .forms import SignUpForm
+from .forms import SignUpForm, OrderForm, ShippingAddressForm, ReturnForm
 from django import forms
 import json
 from cart.cart import Cart 
