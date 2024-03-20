@@ -39,7 +39,7 @@ class Cart():
 
 
     def add(self,product): #,quantity):
-        product_id = str(product_id)
+        product_id = str(product.id)
         #product_qty = str(quantity)
 
         if product_id in self.cart:
