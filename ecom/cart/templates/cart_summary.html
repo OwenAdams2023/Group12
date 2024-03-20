@@ -85,7 +85,9 @@
 
         	{% endfor %}
             
-            <h3 align="right">Total: ${{ totals }}</h3>
+            <h5 align="right">Total: ${{ totals }} <br><br> <a href="{% url 'checkout'%}" class="btn btn-secondary">Checkout</a></h5>
+            <!--<a href="{% url 'checkout'%}" class="btn btn-secondary">Checkout</a>-->
+
 
             <br/><br/><br/>
         	{% else %}

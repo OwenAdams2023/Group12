@@ -83,14 +83,14 @@ def login_user(request):
             login(request, user)
             
             #reload the cart
-            """
-            current_user = UserProfile.objects.get(user__id = request.user_id)
+            
+            current_user = UserProfile.objects.get(user__id = request.user.id)
             saved_cart = current_user.old_cart
             if saved_cart:
                 converted_cart = json.loads(saved_cart)
                 cart = Cart(request)
                 for key,value in converted_cart.items():
-                    cart.db_add(product=key, quantity= value)"""
+                    cart.db_add(product=key, quantity= value)
 
             messages.success(request, ("You have been logged in"))
             return redirect('home')
@@ -143,9 +143,15 @@ def add_product(request):
         
     return render(request, 'add_product.html', {'form': form})
 
+#need to work on checkout
 def checkout(request):
-    current_user = UserProfile.objects.get(user__id = request.user_id)
+    current_user = UserProfile.objects.get(user__id = request.user.id)
+    #get cart info
     cart = Cart(request)
+    cart_products = cart.get_prods
+    quantities = cart.get_quants
+    totals = cart.cart_total()
+
     totals = cart.cart_total()
     if request.method == "POST": 
         order_form = OrderForm(request.POST)
@@ -162,9 +168,50 @@ def checkout(request):
             request.session['cart']= []
             return redirect('order_success')
         else:
-            order_form = OrderForm(initial={'prducts':cart_items})
+            order_form = OrderForm(initial={'products':cart_items})
             address_form = ShippingAddressForm()
             return render(request, "checkout.html", {'order_form': order_form, 'address_form': address_form})
+
+    return render(request, "checkout.html")
+
+########currently working on this
+"""
+def checkout(request):
+    current_user = UserProfile.objects.get(user__id = request.user.id)
+
+    #get cart info
+    cart = Cart(request)
+    cart_products = cart.get_prods
+    quantities = cart.get_quants
+    totals = cart.cart_total()
+    return render(request, "cart_summary.html",{"cart_products": cart_products, "quantities":quantities, "totals":totals })
+
+    if request.method == "POST": 
+        email = request.POST['email']
+        phone_number = request.POST['phone']
+        username = request.POST['username']
+        password = request.POST['password']
+        account_type = request.POST['account_type']
+        order_form = OrderForm(request.POST)
+        address_form = ShippingAddressForm(request.POST)
+        if order_form.is_valid() and address_form.is_valid():
+            order = order_form.save(commit=False)
+            order.customer = current_user
+            order.save()
+            address = address_form.save(commit=False)
+            address_form.user = current_user
+            address.save()
+
+            order.products.add(*cart)
+            request.session['cart']= []
+            return redirect('order_success')
+        else:
+            order_form = OrderForm(initial={'products':cart_items})
+            address_form = ShippingAddressForm()
+            return render(request, "checkout.html", {'order_form': order_form, 'address_form': address_form})
+
+    return render(request, "checkout.html")
+"""
 
 def payment_success(request):
     return render(request, "payment_success.html,{}")
