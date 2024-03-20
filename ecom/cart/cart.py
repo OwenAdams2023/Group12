@@ -35,18 +35,18 @@ class Cart():
             cart_string = str(self.cart)
             cart_string = cart_string.replace ("\'", "\"")
 
-            current_user.update(old_cart= str(cart_string))
+            current_user.update(old_cart=str(cart_string))
 
 
-    def add(self,product): #,quantity):
+    def add(self,product,quantity):
         product_id = str(product.id)
-        #product_qty = str(quantity)
+        product_qty = str(quantity)
 
         if product_id in self.cart:
             pass
         else:
-            self.cart[product_id]= {'price': str(product.price)}
-            #self.cart[product_id]= int(product_qty)
+            #self.cart[product_id]= {'price': str(product.price)}
+            self.cart[product_id]= int(product_qty)
 
         self.session.modified = True
 
@@ -71,7 +71,7 @@ class Cart():
         product_ids = self.cart.keys()
 
         #look up product in DB using product id
-        products= Product.objects.filter(id__in= product_ids)
+        products= Product.objects.filter(id__in=product_ids)
         return products
 
     def get_quants(self):
@@ -88,7 +88,7 @@ class Cart():
 
         self.session.modified = True
 
-        thing =self.cart
+        updated_cart =self.cart
         
         #if user is logged in, update cart info on database
         if self.request.user.is_authenticated:
@@ -97,9 +97,10 @@ class Cart():
             cart_string = str(self.cart)
             cart_string = cart_string.replace ("\'", "\"")
 
-            current_user.update(pld_cart= str(cart_string))
+            current_user.update(old_cart= str(cart_string))
 
-        return thing 
+        #thing =self.cart
+        return updated_cart 
 
     def delete(self,product):
         product_id= str(product)
@@ -115,9 +116,9 @@ class Cart():
             cart_string = str(self.cart)
             cart_string = cart_string.replace ("\'", "\"")
 
-            current_user.update(pld_cart= str(cart_string))
+            current_user.update(old_cart= str(cart_string))
 
-
+    
     def cart_total(self):
         product_ids = self.cart.keys()
         products = Product.objects.filter(id__in=product_ids)
@@ -135,9 +136,9 @@ class Cart():
                         total = total + (product.sale_price *value)
                     else: 
                         total = total + (product.price *value)
-                        """
-                    total = total + (product.price *value)
+                    """
+					
+                    total = total + (product.price * value)
+					
                                     
         return total 
-
-

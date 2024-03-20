@@ -1,7 +1,7 @@
-from django.contrib.auth.models import User, Order, ShippingAddress, ReturnRequest
+from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .models import Product, ShippingAddress
+from .models import Product, ShippingAddress, Order, ShippingAddress, ReturnRequest
 
 class SignUpForm(UserCreationForm):
 	email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email Address'}))
@@ -42,18 +42,19 @@ class ProductForm(forms.ModelForm):
 
 
 #need to complete
+"""
 class ShippingForm(forms.ModelForm):
 
 	class Meta:
 		model = ShippingAddress
 		fields = ('shipping_full_name', 'shipping_email', 'shipping_address1', 'shipping_address2', 'shipping_city', 'shipping_state', 'shipping_zipcode', 'shipping_country')
 
-		exclude = ('user', )
+		exclude = ('user', )"""
 
 class ShippingAddressForm(forms.ModelForm):
     class Meta:
         model = ShippingAddress
-        fields = ['full_name', 'email', 'address1', 'address2', 'city', 'state', 'zipcode', 'country']
+        fields = ('shipping_full_name', 'shipping_email', 'shipping_address1', 'shipping_address2', 'shipping_city', 'shipping_state', 'shipping_zipcode', 'shipping_country')
 
     def __init__(self, *args, **kwargs):
         super(ShippingAddressForm, self).__init__(*args, **kwargs)
@@ -61,12 +62,12 @@ class ShippingAddressForm(forms.ModelForm):
         
         # Conditionally set fields as required
         if self.instance and self.instance.user:
-            self.fields['email'].required = True
-            self.fields['address1'].required = True
-            self.fields['city'].required = True
-            self.fields['state'].required = True
-            self.fields['zipcode'].required = True
-            self.fields['country'].required = True
+            self.fields['shipping_email'].required = True
+            self.fields['shipping_address1'].required = True
+            self.fields['shipping_city'].required = True
+            self.fields['shipping_state'].required = True
+            self.fields['shipping_zipcode'].required = True
+            self.fields['shipping_country'].required = True
 
 class OrderForm(forms.ModelForm):
     class Meta:

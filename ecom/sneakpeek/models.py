@@ -76,9 +76,9 @@ class Order(models.Model):
     phone = models.CharField(max_length=20, default='', blank=True)
     date = models.DateField(default=datetime.datetime.today)
     status = models.BooleanField(default=False)
-    card_number = models.CharField(max_length = 16, default='', balnk=True)
-    cvv = models.CharField(max_length = 3, default='', balnk=True)
-    expiration = models.CharField(max_length = 6, default='', balnk=True)
+    card_number = models.CharField(max_length = 16, default='', blank=True)
+    cvv = models.CharField(max_length = 3, default='', blank=True)
+    expiration = models.CharField(max_length = 6, default='', blank=True)
     
     def __str__(self):
         return self.product

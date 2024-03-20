@@ -24,16 +24,16 @@ def cart_add(request):
     #https://youtu.be/4NqAiqdjMI8?si=7OstAh7QL_skymNr
     if request.POST.get('action') == 'post':
         product_id = int(request.POST.get('product_id'))
-        #product_qty = int(request.POST.get('product_qty'))
+        product_qty = int(request.POST.get('product_qty'))
 
         #get product in DB based on product id
         product = get_object_or_404(Product,id=product_id)
-        cart.add(product=product) #, quantity= product_qty)
+        cart.add(product=product, quantity=product_qty)
         cart_quantity = cart.__len__()
 
         #response= JsonResponse({'Product Name:' : product.name})
         response= JsonResponse({'qty:' : cart_quantity})
-        #messages.success(request ("Product added to cart"))
+        messages.success(request, ("Product added to cart"))
         return response
 
     #return render(request, "cart_add.html")
@@ -46,7 +46,7 @@ def cart_delete(request):
         cart.delete(product=product_id )
 
         response = JsonResponse({'product': product_id})
-        messages.success(request ("Product removed from shopping cart"))
+        messages.success(request, ("Product removed from shopping cart"))
         return response
 
 
@@ -56,9 +56,9 @@ def cart_update(request):
         product_id = int(request.POST.get('product_id'))
         product_qty = int(request.POST.get('product_qty'))
 
-        cart.update(product= product_id, quantity= product_qty )
+        cart.update(product=product_id, quantity=product_qty)
         
         response = JsonResponse({'qty': product_qty})
-        messages.success(request ("Shopping Cart has been updated"))
+        messages.success(request, ("Shopping Cart has been updated"))
         return response
-        #return redirect('cart_summary')"""
+        #return redirect('cart_summary')
