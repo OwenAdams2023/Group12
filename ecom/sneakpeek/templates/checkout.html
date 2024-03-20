@@ -60,6 +60,39 @@
       margin-bottom: 20px;
     }
 
+    .cart-products {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .product {
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    .product-details {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center; /* Align items vertically */
+    }
+
+    .product-details h3,
+    .product-details p {
+      margin: 0;
+      font-size: inherit; /* Use the same font size as other elements */
+    }
+
+    .product-details h3 {
+      margin-right: 20px; /* Adjust spacing */
+    }
+
+    .price,
+    .quantity {
+      margin-right: 20px; /* Adjust spacing */
+      margin-bottom: 10px;
+    }
+
+
   </style>
 </head>
 
@@ -70,64 +103,52 @@
     <form action="/checkout" method="post">
 
       <section>
+        <h2>Order Summary</h2>
+
+        {% if cart_products %}
+        <div class="container">
+          <div class="row">
+            {% for product in cart_products %}
+              <div class="col-md-6">
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <h4 class="card-title">{{ product.name }}</h4>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">Price: ${{ product.price }}</li>
+                      {% for key, value in quantities.items %}
+                        {% if key == product.id|slugify %}
+                          <li class="list-group-item">Quantity: {{ value }}</li>
+                        {% endif %}
+                      {% endfor %}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+
+      <h4>Total: ${{ totals }}</h4>
+
+      </section>
+
+      <section>
         <h2>Shipping Information</h2>
-        <label for="s_firstname">First Name:</label>
-        <input type="text" id="s_firstname" name="s_firstname" required>
-        <label for="s_lastname">Last Name:</label>
-        <input type="text" id="s_lastname" name="s_lastname" required>
+        <label for="s_full_name">Full Name:</label>
+        <input type="text" id="s_full_name" name="s_full_name" required>
 
-        <label for="s_address1">Address 1:</label>
-        <input type="text" id="s_address1" name="s_address1" required>
-        <label for="s_address1">Address 2:</label>
-        <input type="text" id="s_address2" name="s_address2">
-        <label for="s_city">City:</label>
-        <input type="text" id="s_city" name="s_city" required>
-        <label for="s_state">State:</label>
-        <input type="text" id="s_state" name="s_state" required>
-        <label for="s_zipcode">Zipcode:</label>
-        <input type="text" id="s_zipcode" name="s_zipcode" required>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
 
-        <label for="s_email">Email:</label>
-        <input type="email" id="s_email" name="s_email" required>
-
-        <label for="s_phone">Phone:</label>
-        <input type="tel" id="s_phone" name="s_phone">
+        <label for="shipping_address">Full Address:</label>
+        <input type="text" id="shipping_address" name="shipping_address" required>
         
       </section>
 
       <section>
-        <h2>Billing Information</h2>
-
-        <input type="checkbox" id="same_as_shipping"> Same as shipping address
-
-        <label for="b_firstname">First Name:</label>
-        <input type="text" id="b_firstname" name="b_firstname" required>
-        <label for="b_lastname">Last Name:</label>
-        <input type="text" id="b_lastname" name="b_lastname" required>
-
-        <label for="b_address1">Address 1:</label>
-        <input type="text" id="b_address1" name="b_address1" required>
-        <label for="b_address1">Address 2:</label>
-        <input type="text" id="b_address2" name="b_address2" >
-        <label for="b_city">City:</label>
-        <input type="text" id="b_city" name="b_city" required>
-        <label for="b_state">State:</label>
-        <input type="text" id="b_state" name="b_state" required>
-        <label for="b_zipcode">Zipcode:</label>
-        <input type="text" id="b_zipcode" name="b_zipcode" required>
-
-      </section>
-
-      <section>
-        <h2>Order Summary</h2>
-        <p>Item 1: $10.00</p>
-        <p>Item 2: $15.00</p>
-        <p>Shipping: $5.00</p>
-        <p>Total: $30.00</p>
-      </section>
-
-      <section>
-        <h2>Payment Options</h2>
+        <h2>Payment Information</h2>
         <label for="card-name">Name on Card:</label>
         <input type="text" id="card-name" name="card-name" required>
 
@@ -141,6 +162,19 @@
         <input type="text" id="card-cvv" name="card-cvv" required>
       </section>
 
+      <section>
+        <h2>Billing Information</h2>
+
+        <input type="checkbox" id="same_as_shipping"> Same as shipping address
+        
+        <label for="b_full_name">Full Name:</label>
+        <input type="text" id="b_full_name" name="b_full_name" required>
+
+        <label for="billing_address">Full Address:</label>
+        <input type="text" id="billing_address" name="billing_address" required>
+
+      </section>
+
       <button type="submit">Place Order</button>
     </form>
   </main>
@@ -148,39 +182,19 @@
   <script>
   document.addEventListener('DOMContentLoaded', function() {
     var sameAsShipping = document.getElementById('same_as_shipping');
-    var billingFirstName = document.getElementById('b_firstname');
-    var billingLastName = document.getElementById('b_lastname');
-    var billingAddress1 = document.getElementById('b_address1');
-    var billingAddress2 = document.getElementById('b_address2');
-    var billingCity = document.getElementById('b_city');
-    var billingState = document.getElementById('b_state');
-    var billingZipcode = document.getElementById('b_zipcode');
+    var billingFullName = document.getElementById('b_full_name');
+    var billingAddress = document.getElementById('billing_address');
     
-    var shippingFirstName = document.getElementById('s_firstname');
-    var shippingLastName = document.getElementById('s_lastname');
-    var shippingAddress1 = document.getElementById('s_address1');
-    var shippingAddress2 = document.getElementById('s_address2');
-    var shippingCity = document.getElementById('s_city');
-    var shippingState = document.getElementById('s_state');
-    var shippingZipcode = document.getElementById('s_zipcode');
+    var shippingFullName = document.getElementById('s_full_name');
+    var shippingAddress = document.getElementById('shipping_address');
     
     sameAsShipping.addEventListener('change', function() {
       if (this.checked) {
-            billingFirstName.value = shippingFirstName.value;
-            billingLastName.value = shippingLastName.value;
-            billingAddress1.value = shippingAddress1.value;
-            billingAddress2.value = shippingAddress2.value;
-            billingCity.value = shippingCity.value;
-            billingState.value = shippingState.value;
-            billingZipcode.value = shippingZipcode.value;
+            billingFullName.value = shippingFullName.value;
+            billingAddress.value = shippingAddress.value;
         } else {
-            billingFirstName.value = '';
-            billingLastName.value = '';
-            billingAddress1.value = '';
-            billingAddress2.value = '';
-            billingCity.value = '';
-            billingState.value = '';
-            billingZipcode.value = '';
+            billingFullName.value = '';
+            billingAddress.value = '';
         }
     });
 });

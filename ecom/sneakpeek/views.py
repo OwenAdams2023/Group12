@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from .forms import SignUpForm, ProductForm, OrderForm, ShippingAddressForm, ReturnForm
+from .forms import SignUpForm, ProductForm, ShippingAddressForm, ReturnForm #OrderForm
 from django import forms
 from .models import UserProfile, Category, Product
 import json
@@ -172,7 +172,7 @@ def checkout(request):
             address_form = ShippingAddressForm()
             return render(request, "checkout.html", {'order_form': order_form, 'address_form': address_form})
 
-    return render(request, "checkout.html")
+    return render(request, "checkout.html", {"cart_products": cart_products, "quantities":quantities, "totals":totals })
 
 ########currently working on this
 """

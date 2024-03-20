@@ -69,19 +69,54 @@ class Product(models.Model):
         return self.name
 
 class Order(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    customer = models.ForeignKey(Account, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=1)
-    address = models.CharField(max_length=100, default='', blank=True)
-    phone = models.CharField(max_length=20, default='', blank=True)
-    date = models.DateField(default=datetime.datetime.today)
-    status = models.BooleanField(default=False)
+    #product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    full_name = models.CharField(max_length=250, null=True, blank=True)
+    email = models.EmailField(max_length=50, null=True, blank=True)
+    date_ordered = models.DateField(auto_now_add=True, null=True, blank=True)
+    amount_paid = models.DecimalField(max_digits=7, decimal_places=2, default=0)
+    shipping_address = models.TextField(max_length=2000, default='', blank=True)
+    billing_address = models.TextField(max_length=2000, default='', blank=True)
+
+    #shipping information
+    """
+    s_address1 = models.CharField(max_length=200, blank=True)
+    s_address2 = models.CharField(max_length=200, blank=True)
+    s_city = models.CharField(max_length=50, blank=True)
+    s_state = models.CharField(max_length=50, blank=True)
+    s_zipcode = models.CharField(max_length=50, blank=True)
+    #country = models.CharField(max_length=50, blank=True)
+    s_email = models.EmailField(max_length=50)
+    s_phone = models.CharField(max_length=20, default='', blank=True)
+    s_date = models.DateField(auto_now_add=True)
+    #s_status = models.BooleanField(default=False)
+
+    #billing information
+    b_address1 = models.CharField(max_length=200, blank=True)
+    b_address2 = models.CharField(max_length=200, blank=True)
+    b_city = models.CharField(max_length=50, blank=True)
+    b_state = models.CharField(max_length=50, blank=True)
+    b_zipcode = models.CharField(max_length=50, blank=True)
+    
+    #card info
     card_number = models.CharField(max_length = 16, default='', blank=True)
+    
     cvv = models.CharField(max_length = 3, default='', blank=True)
-    expiration = models.CharField(max_length = 6, default='', blank=True)
+    expiration = models.CharField(max_length = 6, default='', blank=True)"""
     
     def __str__(self):
-        return self.product
+        return f'Order - {str(self.id)}'
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quantity = models.PositiveBigIntegerField(default=1)
+    price = models.DecimalField(max_digits=7, decimal_places=2)
+
+    def __str__(self):
+        return f'OrderItem - {str(self.id)}'
+
 
 class ShippingAddress(models.Model):
     user = models.ForeignKey(User, on_delete = models.CASCADE, null=True, blank=True)

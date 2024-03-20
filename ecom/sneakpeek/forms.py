@@ -69,19 +69,20 @@ class ShippingAddressForm(forms.ModelForm):
             self.fields['shipping_zipcode'].required = True
             self.fields['shipping_country'].required = True
 
+"""
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['product', 'quantity', 'address', 'phone',]
+        fields = ['full_name', 'email', 'shipping_address', 'billing_address',]
 
     def __init__(self, *args, **kwargs):
         super(OrderForm, self).__init__(*args, **kwargs)
-        self.fields['product'].widget.attrs['readonly'] = True  # Assuming product should not be editable in the form
-        self.fields['address'].required = True
-        self.fields['phone'].required = True
+        #self.fields['product'].widget.attrs['readonly'] = True  # Assuming product should not be editable in the form
+        self.fields['shipping_address'].required = True
+        self.fields['billing_address'].required = True
         self.fields['card_number'].required = True
         self.fields['cvv'].required = True
-        self.fields['expiration'].required = True
+        self.fields['expiration'].required = True"""
 	    
 class ReturnForm(forms.ModelForm):
     class Meta:

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Account, Product, Order, UserProfile, ShippingAddress
+from .models import Category, Account, Product, Order, OrderItem, UserProfile, ShippingAddress
 from django.contrib.auth.models import User
 
 
@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 admin.site.register(Category)
 admin.site.register(Account)
 admin.site.register(Order)
+admin.site.register(OrderItem)
 admin.site.register(UserProfile)
 admin.site.register(ShippingAddress)
 
