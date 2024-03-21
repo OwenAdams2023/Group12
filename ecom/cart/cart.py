@@ -118,6 +118,20 @@ class Cart():
 
             current_user.update(old_cart= str(cart_string))
 
+    #clearing whole cart
+    def clear_cart(self):
+        for product_id in list(self.cart.keys()):  # Use list() to create a copy of the keys before iterating
+            del self.cart[product_id]
+
+        self.session.modified = True
+
+        if self.request.user.is_authenticated:
+            current_user = UserProfile.objects.filter(user__id=self.request.user.id)
+            cart_string = str(self.cart)
+            cart_string = cart_string.replace ("\'", "\"")
+
+            current_user.update(old_cart= str(cart_string))
+
     
     def cart_total(self):
         product_ids = self.cart.keys()

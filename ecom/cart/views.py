@@ -49,6 +49,16 @@ def cart_delete(request):
         messages.success(request, ("Product removed from shopping cart"))
         return response
 
+#didn't used but was testing
+def cart_clear(request):
+    cart = Cart(request)
+    if request.POST.get('action') == 'post':
+
+        cart.clear_cart()
+
+        messages.success(request, ("Cart Cleared"))
+        return response
+
 
 def cart_update(request):
     cart = Cart(request)

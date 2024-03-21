@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from .forms import SignUpForm, ProductForm, ShippingAddressForm, ReturnForm #OrderForm
 from django import forms
-from .models import UserProfile, Category, Product
+from .models import UserProfile, Category, Product, Order, OrderItem
 import json
 from cart.cart import Cart
 from django.db.models import Q
@@ -145,16 +145,61 @@ def add_product(request):
 
 #need to work on checkout
 def checkout(request):
-    current_user = UserProfile.objects.get(user__id = request.user.id)
-    #get cart info
+    
+    #current_user_id = UserProfile.objects.get(user__id = request.user.id)
+
+    #get cart info to send to frontend
     cart = Cart(request)
-    cart_products = cart.get_prods
-    quantities = cart.get_quants
+    cart_products = cart.get_prods()
+    quantities = cart.get_quants()
     totals = cart.cart_total()
 
-    totals = cart.cart_total()
     if request.method == "POST": 
-        order_form = OrderForm(request.POST)
+
+        user = request.user
+        shipping_full_name = request.POST['s_full_name']
+        email = request.POST['email']
+        amount_paid = totals
+        shipping_address = request.POST['shipping_address']
+        billing_full_name = request.POST['s_full_name']
+        billing_address = request.POST['billing_address']
+        card_number = request.POST['card-number']
+
+        #save to order model 
+        order = Order.objects.create(
+            customer=user,
+            shipping_full_name=shipping_full_name,
+            email=email,
+            amount_paid=amount_paid,
+            shipping_address=shipping_address,
+            billing_full_name=billing_full_name,
+            billing_address=billing_address,
+            card_number=card_number
+        )
+
+        order.save()
+
+        #save to orderitem model
+
+        for product in cart_products:
+            product_id = product.id
+            for prod_id, quantity in quantities.items():
+                if int(prod_id) == product_id:
+
+                    orderitem = OrderItem.objects.create(
+                        order=order,
+                        product=product,
+                        customer=user,
+                        quantity=quantity,
+                        price=product.price
+                    )
+                    orderitem.save()
+
+        messages.success(request, ("Successfully checked out"))
+        cart.clear_cart()
+        return render(request, "cart_summary.html")
+
+        """order_form = OrderForm(request.POST)
         address_form = ShippingAddressForm(request.POST)
         if order_form.is_valid() and address_form.is_valid():
             order = order_form.save(commit=False)
@@ -170,48 +215,10 @@ def checkout(request):
         else:
             order_form = OrderForm(initial={'products':cart_items})
             address_form = ShippingAddressForm()
-            return render(request, "checkout.html", {'order_form': order_form, 'address_form': address_form})
+            return render(request, "checkout.html", {'order_form': order_form, 'address_form': address_form})"""
 
     return render(request, "checkout.html", {"cart_products": cart_products, "quantities":quantities, "totals":totals })
 
-########currently working on this
-"""
-def checkout(request):
-    current_user = UserProfile.objects.get(user__id = request.user.id)
-
-    #get cart info
-    cart = Cart(request)
-    cart_products = cart.get_prods
-    quantities = cart.get_quants
-    totals = cart.cart_total()
-    return render(request, "cart_summary.html",{"cart_products": cart_products, "quantities":quantities, "totals":totals })
-
-    if request.method == "POST": 
-        email = request.POST['email']
-        phone_number = request.POST['phone']
-        username = request.POST['username']
-        password = request.POST['password']
-        account_type = request.POST['account_type']
-        order_form = OrderForm(request.POST)
-        address_form = ShippingAddressForm(request.POST)
-        if order_form.is_valid() and address_form.is_valid():
-            order = order_form.save(commit=False)
-            order.customer = current_user
-            order.save()
-            address = address_form.save(commit=False)
-            address_form.user = current_user
-            address.save()
-
-            order.products.add(*cart)
-            request.session['cart']= []
-            return redirect('order_success')
-        else:
-            order_form = OrderForm(initial={'products':cart_items})
-            address_form = ShippingAddressForm()
-            return render(request, "checkout.html", {'order_form': order_form, 'address_form': address_form})
-
-    return render(request, "checkout.html")
-"""
 
 def payment_success(request):
     return render(request, "payment_success.html,{}")

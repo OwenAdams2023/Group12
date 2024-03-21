@@ -100,8 +100,8 @@
 
   <main>
     <h1>Checkout</h1>
-    <form action="/checkout" method="post">
-
+    <form action="{% url 'checkout' %}" method="post">
+      {% csrf_token %}
       <section>
         <h2>Order Summary</h2>
 

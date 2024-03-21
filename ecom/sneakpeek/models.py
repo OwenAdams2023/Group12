@@ -70,13 +70,15 @@ class Product(models.Model):
 
 class Order(models.Model):
     #product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    full_name = models.CharField(max_length=250, null=True, blank=True)
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    shipping_full_name = models.CharField(max_length=250, null=True, blank=True)
     email = models.EmailField(max_length=50, null=True, blank=True)
     date_ordered = models.DateField(auto_now_add=True, null=True, blank=True)
     amount_paid = models.DecimalField(max_digits=7, decimal_places=2, default=0)
     shipping_address = models.TextField(max_length=2000, default='', blank=True)
+    billing_full_name = models.CharField(max_length=250, null=True, blank=True)
     billing_address = models.TextField(max_length=2000, default='', blank=True)
+    card_number = models.CharField(max_length = 16, default='', blank=True)
 
     #shipping information
     """
@@ -110,7 +112,7 @@ class Order(models.Model):
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    customer = models.ForeignKey(User, on_delete=models.CASCADE)
     quantity = models.PositiveBigIntegerField(default=1)
     price = models.DecimalField(max_digits=7, decimal_places=2)
 
