@@ -50,26 +50,31 @@ def register_user(request):
         email = request.POST['email']
         phone_number = request.POST['phone']
         username = request.POST['username']
-        password = request.POST['password']
+        password = request.POST['password1']
         account_type = request.POST['account_type']
 
         first_name = request.POST['first_name'] # can also use request.POST['first_name']
         last_name = request.POST['last_name']
 
-        user = User.objects.create_user(username, email, password) #create user object
-        user.first_name = first_name
-        user.last_name = last_name
-        user.save()
+        try:
+            user = User.objects.create_user(username, email, password) #create user object
+            user.first_name = first_name
+            user.last_name = last_name
+            user.save()
 
-        #saving phone number
-        user.userprofile.phone = phone_number
-        user.userprofile.account_type = account_type
-        user.userprofile.save()
+            #saving phone number
+            user.userprofile.phone = phone_number
+            user.userprofile.account_type = account_type
+            user.userprofile.save()
 
-        user = authenticate(username=username, password=password)
-        login(request, user)
+            user = authenticate(username=username, password=password)
+            login(request, user)
 
-        return redirect('login')
+            return redirect('login')
+
+        except:
+            messages.success(request, ("Account with those creddentials already exist. Try again"))
+            return redirect('register')
 
     return render(request, 'register.html')
 
@@ -96,7 +101,7 @@ def login_user(request):
             return redirect('home')
         
         else:
-            messages.success(request, ("There was an error. Please log in again"))
+            messages.success(request, ("Wrong credentials. Please try again"))
             return redirect('login')
         
     return render(request, 'login.html', {})     
@@ -163,6 +168,17 @@ def checkout(request):
         billing_address = request.POST['billing_address']
         card_number = request.POST['card-number']
 
+        for product in cart_products:
+            product_id = product.id
+            for prod_id, quantity in quantities.items():
+                if int(prod_id) == product_id:
+                    
+                    product = Product.objects.get(pk=product_id)
+                    warehouse_qty = product.quantity
+                    if (warehouse_qty < quantity):
+                        messages.success(request, ("There isn't enough product at the warehouse at the moment. Please try again"))
+                        return redirect('cart_summary')
+
         #save to order model 
         order = Order.objects.create(
             customer=user,
@@ -174,7 +190,6 @@ def checkout(request):
             billing_address=billing_address,
             card_number=card_number
         )
-
         order.save()
 
         #save to orderitem model
@@ -190,18 +205,15 @@ def checkout(request):
                         quantity=quantity,
                         price=product.price
                     )
+
                     orderitem.save()
 
                     product = Product.objects.get(pk=product_id)
                     curr_qty = product.quantity
-                    if (curr_qty >= quantity):
-                        product.quantity = curr_qty - quantity
-                        if (product.quantity == 0):
-                            product.delete()
-                    else:
-                        order.delete()
-                        messages.success(request, ("There isn't enough product at the warehouse at the moment. Please try again"))
-                        return redirect('cart_summary')
+
+                    product.quantity = curr_qty - quantity  #delete items from database
+                    if (product.quantity == 0):
+                        product.delete()
 
 
         messages.success(request, ("Successfully checked out"))

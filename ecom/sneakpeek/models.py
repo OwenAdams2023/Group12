@@ -51,6 +51,9 @@ class Category(models.Model):
     class Meta:
         verbose_name_plural = 'categories'
 
+class Seller(models.Model):
+    seller = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+
 class Product(models.Model):
     name = models.CharField(max_length=100)
     price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
@@ -113,6 +116,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
+    seller = models.IntegerField(default=1)
     quantity = models.PositiveBigIntegerField(default=1)
     price = models.DecimalField(max_digits=7, decimal_places=2)
 
