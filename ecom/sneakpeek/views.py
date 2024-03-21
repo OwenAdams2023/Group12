@@ -65,6 +65,7 @@ def register_user(request):
             #saving phone number
             user.userprofile.phone = phone_number
             user.userprofile.account_type = account_type
+            #user.userprofile.earning = 0
             user.userprofile.save()
 
             user = authenticate(username=username, password=password)
@@ -150,75 +151,89 @@ def add_product(request):
 
 #need to work on checkout
 def checkout(request):
-    
-    #get cart info to send to frontend
-    cart = Cart(request)
-    cart_products = cart.get_prods()
-    quantities = cart.get_quants()
-    totals = cart.cart_total()
 
-    if request.method == "POST": 
+    current_user = request.user
+    if current_user.is_authenticated:
+        #get cart info to send to frontend
+        cart = Cart(request)
+        cart_products = cart.get_prods()
+        quantities = cart.get_quants()
+        totals = cart.cart_total()
 
-        user = request.user
-        shipping_full_name = request.POST['s_full_name']
-        email = request.POST['email']
-        amount_paid = totals
-        shipping_address = request.POST['shipping_address']
-        billing_full_name = request.POST['s_full_name']
-        billing_address = request.POST['billing_address']
-        card_number = request.POST['card-number']
+        if request.method == "POST": 
 
-        for product in cart_products:
-            product_id = product.id
-            for prod_id, quantity in quantities.items():
-                if int(prod_id) == product_id:
-                    
-                    product = Product.objects.get(pk=product_id)
-                    warehouse_qty = product.quantity
-                    if (warehouse_qty < quantity):
-                        messages.success(request, ("There isn't enough product at the warehouse at the moment. Please try again"))
-                        return redirect('cart_summary')
+            user = request.user
+            shipping_full_name = request.POST['s_full_name']
+            email = request.POST['email']
+            amount_paid = totals
+            shipping_address = request.POST['shipping_address']
+            billing_full_name = request.POST['s_full_name']
+            billing_address = request.POST['billing_address']
+            card_number = request.POST['card-number']
 
-        #save to order model 
-        order = Order.objects.create(
-            customer=user,
-            shipping_full_name=shipping_full_name,
-            email=email,
-            amount_paid=amount_paid,
-            shipping_address=shipping_address,
-            billing_full_name=billing_full_name,
-            billing_address=billing_address,
-            card_number=card_number
-        )
-        order.save()
+            for product in cart_products:
+                product_id = product.id
+                for prod_id, quantity in quantities.items():
+                    if int(prod_id) == product_id:
+                        
+                        product = Product.objects.get(pk=product_id)
+                        warehouse_qty = product.quantity
+                        if (warehouse_qty < quantity):
+                            messages.success(request, ("There isn't enough product at the warehouse at the moment. Please try again"))
+                            return redirect('cart_summary')
 
-        #save to orderitem model
-        for product in cart_products:
-            product_id = product.id
-            for prod_id, quantity in quantities.items():
-                if int(prod_id) == product_id:
+            #save to order model 
+            order = Order.objects.create(
+                customer=user,
+                shipping_full_name=shipping_full_name,
+                email=email,
+                amount_paid=amount_paid,
+                shipping_address=shipping_address,
+                billing_full_name=billing_full_name,
+                billing_address=billing_address,
+                card_number=card_number
+            )
+            order.save()
 
-                    orderitem = OrderItem.objects.create(
-                        order=order,
-                        product=product,
-                        customer=user,
-                        quantity=quantity,
-                        price=product.price
-                    )
+            #save to orderitem model
+            for product in cart_products:
+                product_id = product.id
+                for prod_id, quantity in quantities.items():
+                    if int(prod_id) == product_id:
+                        seller_id=product.seller.id
 
-                    orderitem.save()
+                        orderitem = OrderItem.objects.create(
+                            order=order,
+                            product=product,
+                            customer=user,
+                            seller_id=seller_id,
+                            quantity=quantity,
+                            price=product.price
+                        )
+                        orderitem.save()
 
-                    product = Product.objects.get(pk=product_id)
-                    curr_qty = product.quantity
+                        #deal with managing product on database
+                        product = Product.objects.get(pk=product_id)
+                        curr_qty = product.quantity
 
-                    product.quantity = curr_qty - quantity  #delete items from database
-                    if (product.quantity == 0):
-                        product.delete()
+                        product.quantity = curr_qty - quantity  #delete items from database
+                        if (product.quantity == 0):
+                            product.delete()
+
+                        #add earning to the seller's account
+                        seller = User.objects.get(pk=seller_id)
+                        curr_earning = seller.userprofile.earning
+                        seller.userprofile.earning = curr_earning + (product.price * quantity)
+                        seller.userprofile.save()
 
 
-        messages.success(request, ("Successfully checked out"))
-        cart.clear_cart()
-        return render(request, "cart_summary.html")
+            messages.success(request, ("Successfully checked out"))
+            cart.clear_cart()
+            return render(request, "cart_summary.html")
+
+    else:
+        messages.success(request, ("Please log in to Checkout"))
+        return redirect('login')
 
     return render(request, "checkout.html", {"cart_products": cart_products, "quantities":quantities, "totals":totals })
 

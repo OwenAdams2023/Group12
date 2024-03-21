@@ -15,6 +15,7 @@ class UserProfile(models.Model):
     state = models.CharField(max_length=50, blank=True)
     zipcode = models.CharField(max_length=50, blank=True)
     country = models.CharField(max_length=50, blank=True)
+    earning = models.DecimalField(default=0, decimal_places=2, max_digits=10)
     old_cart= models.CharField(max_length=200, blank=True,null=True)
 
     def __str__(self):
@@ -51,9 +52,6 @@ class Category(models.Model):
     class Meta:
         verbose_name_plural = 'categories'
 
-class Seller(models.Model):
-    seller = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
-
 class Product(models.Model):
     name = models.CharField(max_length=100)
     price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
@@ -82,32 +80,6 @@ class Order(models.Model):
     billing_full_name = models.CharField(max_length=250, null=True, blank=True)
     billing_address = models.TextField(max_length=2000, default='', blank=True)
     card_number = models.CharField(max_length = 16, default='', blank=True)
-
-    #shipping information
-    """
-    s_address1 = models.CharField(max_length=200, blank=True)
-    s_address2 = models.CharField(max_length=200, blank=True)
-    s_city = models.CharField(max_length=50, blank=True)
-    s_state = models.CharField(max_length=50, blank=True)
-    s_zipcode = models.CharField(max_length=50, blank=True)
-    #country = models.CharField(max_length=50, blank=True)
-    s_email = models.EmailField(max_length=50)
-    s_phone = models.CharField(max_length=20, default='', blank=True)
-    s_date = models.DateField(auto_now_add=True)
-    #s_status = models.BooleanField(default=False)
-
-    #billing information
-    b_address1 = models.CharField(max_length=200, blank=True)
-    b_address2 = models.CharField(max_length=200, blank=True)
-    b_city = models.CharField(max_length=50, blank=True)
-    b_state = models.CharField(max_length=50, blank=True)
-    b_zipcode = models.CharField(max_length=50, blank=True)
-    
-    #card info
-    card_number = models.CharField(max_length = 16, default='', blank=True)
-    
-    cvv = models.CharField(max_length = 3, default='', blank=True)
-    expiration = models.CharField(max_length = 6, default='', blank=True)"""
     
     def __str__(self):
         return f'Order - {str(self.id)}'
@@ -116,7 +88,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
-    seller = models.IntegerField(default=1)
+    seller_id = models.IntegerField(default=1)
     quantity = models.PositiveBigIntegerField(default=1)
     price = models.DecimalField(max_digits=7, decimal_places=2)
 
