@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Account, Product, Order, OrderItem, UserProfile, ShippingAddress
+from .models import Category, Account, Product, Order, OrderItem, UserProfile, ShippingAddress, ReturnRequest
 from django.contrib.auth.models import User
 
 
@@ -10,6 +10,7 @@ admin.site.register(Order)
 admin.site.register(OrderItem)
 admin.site.register(UserProfile)
 admin.site.register(ShippingAddress)
+admin.site.register(ReturnRequest)
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ("name", "price", "quantity", "seller", "brand")

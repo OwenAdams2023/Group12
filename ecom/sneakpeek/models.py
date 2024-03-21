@@ -138,8 +138,8 @@ class ShippingAddress(models.Model):
         return f'Shipping Adress - {str(self.id)}'
 
 class ReturnRequest(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    reason = models.TextField()
+    order = models.ForeignKey(OrderItem, on_delete=models.CASCADE)
+    reason = models.TextField(max_length=500)
     submitted_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

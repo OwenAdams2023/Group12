@@ -11,6 +11,8 @@
 
                     <li class="nav-item"><a class="nav-link" href="{% url 'search' %}">Search</a></li>
 
+                    <li class="nav-item"><a class="nav-link" href="{% url 'orderhistory' %}">Orders</a></li>
+
                     {% if is_seller %}
                         <!--<button type="submit"> <a href="{% url 'add_product' %}"> Add Products </a></button>-->
                         <li class="nav-item"><a class="nav-link" href="{% url 'add_product' %}">Add Product</a></li>

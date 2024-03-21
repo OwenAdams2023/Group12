@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from .forms import SignUpForm, ProductForm, ShippingAddressForm, ReturnForm #OrderForm
 from django import forms
-from .models import UserProfile, Category, Product, Order, OrderItem
+from .models import UserProfile, Category, Product, Order, OrderItem, ReturnRequest
 import json
 from cart.cart import Cart
 from django.db.models import Q
@@ -146,8 +146,6 @@ def add_product(request):
 #need to work on checkout
 def checkout(request):
     
-    #current_user_id = UserProfile.objects.get(user__id = request.user.id)
-
     #get cart info to send to frontend
     cart = Cart(request)
     cart_products = cart.get_prods()
@@ -180,7 +178,6 @@ def checkout(request):
         order.save()
 
         #save to orderitem model
-
         for product in cart_products:
             product_id = product.id
             for prod_id, quantity in quantities.items():
@@ -195,46 +192,49 @@ def checkout(request):
                     )
                     orderitem.save()
 
+                    product = Product.objects.get(pk=product_id)
+                    curr_qty = product.quantity
+                    if (curr_qty >= quantity):
+                        product.quantity = curr_qty - quantity
+                        if (product.quantity == 0):
+                            product.delete()
+                    else:
+                        order.delete()
+                        messages.success(request, ("There isn't enough product at the warehouse at the moment. Please try again"))
+                        return redirect('cart_summary')
+
+
         messages.success(request, ("Successfully checked out"))
         cart.clear_cart()
         return render(request, "cart_summary.html")
 
-        """order_form = OrderForm(request.POST)
-        address_form = ShippingAddressForm(request.POST)
-        if order_form.is_valid() and address_form.is_valid():
-            order = order_form.save(commit=False)
-            order.customer = current_user
-            order.save()
-            address = address_form.save(commit=False)
-            address_form.user = current_user
-            address.save()
-
-            order.products.add(*cart)
-            request.session['cart']= []
-            return redirect('order_success')
-        else:
-            order_form = OrderForm(initial={'products':cart_items})
-            address_form = ShippingAddressForm()
-            return render(request, "checkout.html", {'order_form': order_form, 'address_form': address_form})"""
-
     return render(request, "checkout.html", {"cart_products": cart_products, "quantities":quantities, "totals":totals })
 
+def order_history(request):
+
+    current_user = request.user
+    user_orders = OrderItem.objects.filter(customer=current_user)
+
+    return render(request, "order_history.html", {'user_orders': user_orders})
 
 def payment_success(request):
     return render(request, "payment_success.html,{}")
 
 def return_request(request, order_id):
-    order= Order.objects.get(id=order_id)
+    order= OrderItem.objects.get(id=order_id)
+
     if request.method == 'POST':
-        form = ReturnForm(request.POST)
-        if form.is_valid():
-            return_request = form.save(commit=False)
-            return_request.order = order
-            return_request.save()
-            return redirect('return_request_success')
-        else:
-            form = ReturnForm()
-        return render(request, 'return_request.html',{'form':form, 'order':order})
+        reason = request.POST['reason']
+        return_request = ReturnRequest.objects.create(
+            order=order,
+            reason=reason
+        )
+
+        return_request.save()
+        messages.success(request, ("Order Return has been initiated"))
+        return render(request, 'return_request_successful.html')
+
+    return render(request, 'returnRequest.html', {'order':order})
 
 def return_request_success(request):
     return render(request, 'return_request_success.html')
