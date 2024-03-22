@@ -19,12 +19,14 @@
                           Account
                         </a>
                         <ul class="dropdown-menu">
-                          <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'update_user' %}">Profile</a></li>
                           <li><a class="dropdown-item" href="{% url 'orderhistory' %}">Order History</a></li>
+                          <li><a class="dropdown-item" href="{% url 'update_info' %}">User Info</a></li>
                           
                           {% if user.userprofile.account_type == 'Seller' %}
+                          <li><hr class="dropdown-divider" /></li>                          
                           <li><a class="dropdown-item" href="{% url 'add_product' %}">Add Product</a></li>
-                          <li><a class="dropdown-item" href="#">View Earning</a></li>
+                          <li><a class="dropdown-item" href="{% url 'earning' %}">View Earning</a></li>
                           {% endif %}
 
                           <li><hr class="dropdown-divider"></li>

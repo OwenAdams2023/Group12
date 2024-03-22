@@ -15,4 +15,8 @@ urlpatterns = [
     path('checkout/', views.checkout, name='checkout'),
     path('orderhistory/', views.order_history, name='orderhistory'),
     path('return_request/<int:order_id>/', views.return_request, name='return_request'),
+    path('update_password/', views.update_password, name='update_password'),
+    path('update_info/', views.update_info, name='update_info'),
+    path('update_user/', views.update_user, name='update_user'),
+    path('earning/', views.update_earning, name='earning'),
 ]

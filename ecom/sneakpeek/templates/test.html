@@ -1,119 +1,21 @@
-{% extends 'base.html' %}
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>SneakPeek</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+        <h3>Add New Products</h3>
 
-
-{% block content %}
-
-        <!-- Header-->
-        <header class="bg-dark py-1">
-            <div class="container px-4 px-lg-5 my-1">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Login</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Login with your credentials</p>
-                </div>
-            </div>
-        </header>
-        <br/>
-        <div class="container">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Register Account</title>
-            <!--<link rel="stylesheet" href="styles.css">-->
-            <style>
-                *{
-                    margin: 0;
-                    padding: 0;
-                    text-decoration: none;
-                    box-sizing: border-box;
-                }
-                body{
-                    min-height: 100vh;
-                    background: linear-gradient(to left top, #FF7F50, #FFA07A, #FFDAB9, #FFFACD);
-                }
-                form{
-                    background: #f8f9fa;
-                    width: 325px;
-                    height: 500px;
-                    padding: 75px 75px;
-                    position: absolute;
-                    left: 50%;
-                    top: 50%;
-                    transform: translate(-50%, -50%);
-                }
-                h1{
-                    text-align: center;
-                    font-family: Verdana, sans-serif;
-                    margin-bottom: 45px;
-                    color: white;
-                    font-size: 38px;
-                }
-                h3{
-                    text-align:left;
-                    font-family: Verdana, sans-serif;
-                    margin-bottom: 10px;
-                    margin-top: 20px;
-                    color: white;
-                    font-size: 18px;
-                }
-                #accountExists{
-                    text-align: center;
-                    color: white;
-                    font-family: Verdana, sans-serif;
-                    margin-bottom: 10px;
-                    margin-top: 20px;
-                }
-                #login{
-                    text-align: center;
-                    font-family: Verdana, sans-serif;
-                }
-            </style>
-        </head>
-        <!--Need to add id for username need to add id for name, and -->
-        <body>
-            <form action="{% url 'register' %}" method="post">
+        <form method="POST" action="{% url 'add_product' %}" enctype="multipart/form-data">
             {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Add Product</button>
+        </form>
 
-                <h1>Create Account</h1>
-                
-                <label for="account_type">Account Type:</label><br>
-                <select id="account_type" name="account_type">
-                    <option value="Buyer">Buyer</option>
-                    <option value="Seller">Seller</option>
-                </select><br><br>
-
-                <div class="textBox">
-                    <input name="username" type="text" placeholder="Username">
-                </div>
-                <div>
-                    <input name="first_name" type="text" placeholder="First Name">
-                </div>
-                <div>
-                    <input name="last_name" type="text" placeholder="Last Name">
-                </div>
-                <div>
-                    <input name="email" type="email" placeholder="E-mail Address">
-                </div>
-                <div>
-                    <input name="password" type="password" placeholder="Password">
-                </div>
-                <div>
-                    <input name="phone" type="tel" placeholder="Phone #">
-                </div>
-                <div>
-                    <input name="homeAddress" type="address" placeholder="Home address">
-                </div>
-                <input type="submit" value="Create">
-                
-                <div id="accountExists">
-                    Already have an account?
-                    <!--<a id="login" href="#">Login</a>-->
-                </div>
-                <div id="login">
-                    <a href="#">Login</a>
-                </div>
-
-            </form>
-        </body>
-
-
-{% endblock %}
+        <script src="" async defer></script>
+    </body>
+</html>
