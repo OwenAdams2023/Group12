@@ -74,7 +74,7 @@
         <section>
             <form method="POST" action="{% url 'earning' %}">
                 {% csrf_token %}
-                <div class="earnings-total" style="font-size: larger";>Total: {{ user.userprofile.earning }}</div>
+                <div class="earnings-total" style="font-size: larger";>Total: ${{ user.userprofile.earning }}</div>
                 <p align = "right">
                     <button type="submit" class="btn btn-secondary">Collect Earnings</button>
             </form>
