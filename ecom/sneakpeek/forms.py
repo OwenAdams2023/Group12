@@ -1,7 +1,9 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, SetPasswordForm
+from django.core.validators import MinValueValidator
+from django.db.models.functions import Lower
 from django import forms
-from .models import Product, ShippingAddress, ReturnRequest, UserProfile, Order
+from .models import Product, ShippingAddress, ReturnRequest, UserProfile, Order, Category
 
 class SignUpForm(UserCreationForm):
 	email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email Address'}))
@@ -33,6 +35,14 @@ class SignUpForm(UserCreationForm):
 
 #needs changes and testing
 class ProductForm(forms.ModelForm):
+
+	name = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Product Name'}), required=True)
+	price = forms.DecimalField(label="", widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Price'}), required=True)
+	quantity = forms.IntegerField(label="", widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Quantity'}), required=True)
+	category = forms.ModelChoiceField(label="", queryset=Category.objects.all().order_by(Lower('product_type')), widget=forms.Select(attrs={'class': 'form-control', 'placeholder': 'Category'}), required=True)
+	brand = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Brand'}), required=True)
+	image = forms.ImageField(label="", widget=forms.FileInput(attrs={'class': 'form-control-file'}), required=True)
+	description = forms.CharField(label="", widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Description'}), required=True)
 	
 	class Meta:
 		model = Product

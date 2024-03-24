@@ -20,7 +20,7 @@
         Search
     </div>
     <div class="card-body">
-        <form method="POST" action="{% url 'search' %}">
+        <form method="POST" action="{% url 'search'%}">
             {% csrf_token %}
             <div class="mb-3">
                 <input type="text" class="form-control" placeholder="Search For Products" name="searched">

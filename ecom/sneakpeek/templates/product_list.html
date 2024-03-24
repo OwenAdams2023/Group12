@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<header class="bg-dark py-3">
+  <div class="container px-4 px-lg-5 my-3">
+      <div class="text-center text-white">
+          <h1 class="display-4 fw-bolder">Product Listings</h1>
+          <p class="lead fw-normal text-white-50 mb-0">View your Product Listings on SneakPeek</p>
+      </div>
+  </div>
+</header>
+<br/>
+
+<div class="container">
+    {% for product in user_products %}
+
+    <div class="card mb-3" style="max-width: 540px;">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="...">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{ product.name }}</h5>
+              <p class="card-text">${{ product.price }}</p>
+              <p class="card-text"><small class="text-body-secondary">Order ID: #{{ product.id }}</small></p>
+              <button type="button" data-index="{{product.id}}" class="btn btn-danger delete-product">Delete Listing</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </br></br>
+
+      {% endfor %}
+    </div>
+
+    </br></br></br></br></br></br></br></br></br></br></br></br></br></br>
+
+    <script>
+    $(document).on('click', '.delete-product', function(e){
+        e.preventDefault();
+        // grab the product id
+        //var productid = $(this).data('index');
+    
+        $.ajax({
+        type: 'POST',
+        url: '{% url 'delete_product' %}',
+        data: {
+          product_id: $(this).data('index'),
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+          action: 'post'
+        },
+        success: function(json){
+            //console.log(json)
+            //document.getElementById("cart_quantity").textContent = json.qt
+            location.reload();
+        },
+    
+        error: function(xhr, errmsg, err){
+    
+        }
+    
+    
+        });
+    
+    })
+</script>
+
+
+{% endblock %}

@@ -8,6 +8,7 @@ from .forms import SignUpForm, ProductForm, ShippingAddressForm, ReturnForm, Upd
 from django import forms
 from .models import UserProfile, Category, Product, Order, OrderItem, ReturnRequest
 import json
+from django.http import JsonResponse
 from cart.cart import Cart
 from django.db.models import Q
 
@@ -316,6 +317,26 @@ def order_history(request):
     user_orders = OrderItem.objects.filter(customer=current_user)
 
     return render(request, "order_history.html", {'user_orders': user_orders})
+
+def product_list(request):
+
+    current_user = request.user
+    user_products = Product.objects.filter(seller=current_user)
+
+    return render(request, "product_list.html", {'user_products': user_products})
+
+def product_delete(request):
+
+    if request.POST.get('action') == 'post':
+        product_id = int(request.POST.get('product_id'))
+        product= Product.objects.get(pk=product_id)
+
+        product.delete()
+
+        response = JsonResponse({'product': product_id})
+        messages.success(request, ("Product listing removed from the site"))
+        return response
+
 
 def payment_success(request):
     return render(request, "payment_success.html,{}")
