@@ -24,8 +24,7 @@ Project objective:
   application that could exist due to its functionalities.
 
 Project features:
-  This project was created using html, css, and javascript for front-end design, and python with SQLite DB for back-end/server-side design. (NEED TO TALK ABOUT HOW WE MAKE
-  JUMP FROM HTML DOC TO ACTUAL WEBSITE). The project also has a core design that utilizes three different types of user classes, the Buyer, the Seller, and the Admin. The buyer can create an account,
+  This project was created using html, css, and javascript for front-end design, and python with SQLite DB for back-end/server-side design. The project also has a core design that utilizes three different types of user classes, the Buyer, the Seller, and the Admin. The buyer can create an account,
   login, search for products, compare products to each other, add products to their cart, edit their cart, checkout their cart, and return products. The seller can create an account, login, add their products
   for sale, receive payments that can be transferred to their bank, and even edit or add more products to their inventory. The admin has the ability to approve or deny new user accounts, and is also responsible
   for overseeing different buyer and seller activities as well as having access to personal information.
