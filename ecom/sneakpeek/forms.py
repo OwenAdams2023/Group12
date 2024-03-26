@@ -113,6 +113,18 @@ class UpdateUserInfoForm(forms.ModelForm):
 		model = UserProfile
 		fields = ('phone', 'address1', 'address2', 'city', 'state', 'zipcode', 'country')
 
+class UpdateProductInfoForm(forms.ModelForm):
+	name = forms.CharField(label = "", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder':'Name'}), required=False)
+	price = forms.DecimalField(label = "", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder':'Price'}), required=False)
+	quantity = forms.IntegerField(label = "", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder':'Quanity'}), required=False)
+	brand = forms.CharField(label = "", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder':'Brand'}), required=False)
+	description = forms.CharField(label = "", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder':'Description'}), required=False)
+	#image = forms.ImageField(label = "", widget=forms.FileInput(attrs={'class': 'form-control-file', 'placeholder':'Image'}), required=False)
+
+	class Meta:
+		model = Product
+		fields = ('name', 'price', 'quantity', 'category', 'brand', 'description')
+
 class UpdatePasswordForm(SetPasswordForm):
 	class Meta:
 		model = User

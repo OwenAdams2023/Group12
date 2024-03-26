@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from .forms import SignUpForm, ProductForm, ShippingAddressForm, ReturnForm, UpdateUserForm, UpdatePasswordForm, UpdateUserInfoForm
+from .forms import SignUpForm, ProductForm, ShippingAddressForm, ReturnForm, UpdateUserForm, UpdatePasswordForm, UpdateUserInfoForm, UpdateProductInfoForm
 from django import forms
 from .models import UserProfile, Category, Product, Order, OrderItem, ReturnRequest
 import json
@@ -153,6 +153,7 @@ def update_info(request):
     else:
          messages.success(request, "Please log in first before updating your account")
          return redirect('home')
+
 
 def update_user(request):
 
@@ -336,6 +337,23 @@ def product_delete(request):
         response = JsonResponse({'product': product_id})
         messages.success(request, ("Product listing removed from the site"))
         return response
+
+def product_update(request,pk):
+
+    product= Product.objects.get(pk=pk)
+    form = UpdateProductInfoForm(request.POST or None, instance=product)
+
+    if request.method == 'POST':
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your information has been updated!")
+    
+    return render(request, "update_product_info.html", {'form':form, 'product':product})
+    
+    #return render(request, "update_product_info.html", {'form':form})
+
+    #return render(request, "update_product_info.html", {'form': form, 'product':product})
 
 
 def payment_success(request):
