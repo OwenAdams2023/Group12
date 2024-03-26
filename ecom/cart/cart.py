@@ -41,6 +41,7 @@ class Cart():
     def add(self,product,quantity):
         product_id = str(product.id)
         product_qty = str(quantity)
+        #product_size = str(size)
 
         if product_id in self.cart:
             pass

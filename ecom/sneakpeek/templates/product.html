@@ -58,6 +58,21 @@
                 </select>
                 </div>
             </div>
+
+</br>
+            <div class="row justify-content-center">
+              <div class="col-md-2">Size:</div>
+                          <div class="col-md-2">
+                          <select class="form-select form-select-sm" id="size-cart">
+                            <option value="1">6</option>
+                            <option value="2">6.5</option>
+                            <option value="3">7</option>
+                            <option value="4">7.5</option>
+                            <option value="5">8</option>
+                            <option value="5">8.5</option>
+                          </select>
+                          </div>
+                      </div>
             <br/><br/>
         <a href="{% url 'home'%}" class="btn btn-secondary">Home</a>
         <button type="button" value="{{ product.id }}" class="btn btn-secondary" id="add-cart">Add To Cart</button>
@@ -82,6 +97,7 @@ $(document).on('click', '#add-cart', function(e){
         data: {
     product_id: $('#add-cart').val(),
     product_qty: $('#qty-cart option:selected').text(),
+    product_size: $('size-cart option:selected').text(),
     csrfmiddlewaretoken: '{{ csrf_token }}',
     action: 'post'
         },

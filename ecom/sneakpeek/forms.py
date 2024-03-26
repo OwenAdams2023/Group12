@@ -123,7 +123,7 @@ class UpdateProductInfoForm(forms.ModelForm):
 
 	class Meta:
 		model = Product
-		fields = ('name', 'price', 'quantity', 'category', 'brand', 'description')
+		fields = ('name', 'price', 'quantity', 'brand', 'description')
 
 class UpdatePasswordForm(SetPasswordForm):
 	class Meta:
