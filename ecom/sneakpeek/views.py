@@ -183,6 +183,9 @@ def product(request,pk):
 
 def update_earning(request):
 
+    current_seller = request.user
+    sold_orders = OrderItem.objects.filter(seller_id=current_seller.id)
+
     if request.method == "POST":
         current_user = request.user
         current_user.userprofile.earning = 0
@@ -190,7 +193,7 @@ def update_earning(request):
 
         messages.success(request, "We have initiated the transfer")
 
-    return render(request, 'seller_earnings.html')
+    return render(request, 'seller_earnings.html', {'sold_orders':sold_orders})
 
 def category(request,cat_name):
     cat_name = cat_name.replace("-",' ')
@@ -295,6 +298,8 @@ def checkout(request):
                         if (product.quantity == 0):
                             product.delete()
 
+                        product.save()
+
                         #add earning to the seller's account
                         seller = User.objects.get(pk=seller_id)
                         curr_earning = seller.userprofile.earning
@@ -304,7 +309,7 @@ def checkout(request):
 
             messages.success(request, ("Successfully checked out"))
             cart.clear_cart()
-            return render(request, "cart_summary.html")
+            return render(request, "PaymentSuccess.html")
 
     else:
         messages.success(request, ("Please log in to Checkout"))
