@@ -41,30 +41,37 @@
 
     <script>
     $(document).on('click', '.delete-product', function(e){
+
+        var confirmation = confirm("Deleting this product will delete it from the database. Are you sure you want to take this action?");
+
         e.preventDefault();
-        // grab the product id
-        //var productid = $(this).data('index');
-    
-        $.ajax({
-        type: 'POST',
-        url: '{% url 'delete_product' %}',
-        data: {
-          product_id: $(this).data('index'),
-          csrfmiddlewaretoken: '{{ csrf_token }}',
-          action: 'post'
-        },
-        success: function(json){
-            //console.log(json)
-            //document.getElementById("cart_quantity").textContent = json.qt
-            location.reload();
-        },
-    
-        error: function(xhr, errmsg, err){
-    
+
+        if (confirmation){
+          $.ajax({
+          type: 'POST',
+          url: '{% url 'delete_product' %}',
+          data: {
+            product_id: $(this).data('index'),
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            action: 'post'
+          },
+          success: function(json){
+              //console.log(json)
+              //document.getElementById("cart_quantity").textContent = json.qt
+              location.reload();
+          },
+      
+          error: function(xhr, errmsg, err){
+      
+          }
+      
+      
+          });
+      }
+
+      else {
+            alert("Action cancelled.");
         }
-    
-    
-        });
     
     })
 
