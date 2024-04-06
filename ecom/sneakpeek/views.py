@@ -68,11 +68,9 @@ def register_user(request):
             user.userprofile.account_type = account_type
             #user.userprofile.earning = 0
             user.userprofile.save()
-
-            user = authenticate(username=username, password=password)
-            login(request, user)
-
-            return redirect('login')
+            
+            messages.success(request, ("Your account creation has been sent for approval."))
+            return redirect('home')
 
         except:
             messages.success(request, ("Account with those creddentials already exist. Try again"))
@@ -86,21 +84,32 @@ def login_user(request):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            
-            #reload the cart
-            
-            current_user = UserProfile.objects.get(user__id = request.user.id)
-            saved_cart = current_user.old_cart
-            if saved_cart:
-                converted_cart = json.loads(saved_cart)
-                cart = Cart(request)
-                for key,value in converted_cart.items():
-                    cart.db_add(product=key, quantity= value)
 
-            messages.success(request, ("You have been logged in"))
-            return redirect('home')
+        if user is not None:
+            user_approved = user.userprofile.approved
+
+            if user_approved==True:
+                login(request, user)
+            
+                #reload the cart             
+                current_user = UserProfile.objects.get(user__id = request.user.id)
+                saved_cart = current_user.old_cart
+                if saved_cart:
+                    converted_cart = json.loads(saved_cart)
+                    cart = Cart(request)
+                    for key,value in converted_cart.items():
+                        cart.db_add(product=key, quantity= value)
+
+                messages.success(request, ("You have been logged in"))
+                return redirect('home')
+
+            elif user_approved==None:
+                messages.success(request, ("Unable to log in...."))
+                messages.success(request, ("You account is still pending approval!"))
+
+            else:
+                messages.success(request, ("Unable to log in...."))
+                messages.success(request, ("You account creation was rejected!"))
         
         else:
             messages.success(request, ("Wrong credentials. Please try again"))
@@ -382,4 +391,32 @@ def return_request(request, order_id):
 
 def return_request_success(request):
     return render(request, 'return_request_success.html')
+
+#admin actions
+def account_approval(request):
+
+    pending_accounts = User.objects.filter(userprofile__approved__isnull=True).order_by('date_joined')
+
+    return render(request, 'pending_account_approval.html', {'accounts':pending_accounts})
+
+def account_action(request):
+
+    if request.POST.get('action') == 'post':
+        user_id = int(request.POST.get('user_id'))
+        admin_action = request.POST.get('admin_action')
+
+        user= User.objects.get(pk=user_id)
+
+        if admin_action == "reject":
+            user.userprofile.approved = False
+            response = JsonResponse({'user': user_id})
+            messages.success(request, ("User profile creation has been rejected. User has been removed."))
+
+        elif admin_action == "approve":
+            user.userprofile.approved = True
+            response = JsonResponse({'user': user_id})
+            messages.success(request, ("User profile creation has been approved"))
+
+        user.userprofile.save()
+        return response
 

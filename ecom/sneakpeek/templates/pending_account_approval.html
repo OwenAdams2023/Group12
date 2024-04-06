@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<header class="bg-dark py-3">
+  <div class="container px-4 px-lg-5 my-3">
+      <div class="text-center text-white">
+          <h1 class="display-4 fw-bolder">Account Approvals</h1>
+          <p class="lead fw-normal text-white-50 mb-0">View pending account approvals</p>
+      </div>
+  </div>
+</header>
+<br/>
+
+<div class="container" style="width: 40%; margin: 0 auto;">
+    {% for account in accounts %}
+
+    <div class="card text-center">
+        <div class="card-header">
+            {{ account.userprofile.account_type }}
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ account.username }}</h5>
+          <p class="card-text">Name: {{ account.first_name }} {{ account.last_name }}</p>
+          <p class="card-text">Email: {{ account.email }}</p>
+          <button type="button" data-index="{{account.id}}" data-another-index="approve" class="btn btn-secondary action">Approve</button>
+          <button type="button" data-index="{{account.id}}" data-another-index="reject" class="btn btn-danger action">Reject</button>
+
+        </div>
+        <div class="card-footer text-body-secondary">
+          Joined: {{ account.date_joined }}
+        </div>
+      </div>
+      
+    </br>
+
+      {% endfor %}
+
+</div>
+
+<script>
+    $(document).on('click', '.action', function(e){
+
+        var anotherIndexValue = $(this).data('another-index');
+        if (anotherIndexValue === 'reject') {
+            var confirmation = confirm("Rejecting this account will delete it from the database. Are you sure you want to take this action?");
+        }
+
+        else if (anotherIndexValue === 'approve'){
+            var confirmation = confirm("Approving this account will allow it to access the store functionalities. Are you sure you want to take this action?");
+        }
+        
+        if (confirmation) {
+            $.ajax({
+            type: 'POST',
+            url: '{% url 'account_action' %}',
+            data: {
+                user_id: $(this).data('index'),
+                admin_action: $(this).data('another-index'),
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action: 'post'
+            },
+            success: function(json){
+                location.reload();
+            },
+        
+            error: function(xhr, errmsg, err){
+
+            }
+        });
+        }
+
+        else {
+            alert("Action cancelled.");
+        }
+    
+    })
+
+</script>
+
+
+{% endblock %}

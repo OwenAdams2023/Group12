@@ -6,6 +6,8 @@ from django.db.models.signals import post_save
 # Create your models here.
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    #approved = models.BooleanField(default=False)  #accout approval status, false when created, true when admin approves
+    approved = models.BooleanField(null=True)
     date_modified = models.DateTimeField(auto_now=True)
     account_type = models.CharField(max_length=50, blank=True)
     phone = models.CharField(max_length=50, blank=True)

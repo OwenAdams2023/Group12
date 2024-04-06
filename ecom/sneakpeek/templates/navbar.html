@@ -15,19 +15,31 @@
                           Account
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'update_user' %}">Profile</a></li>
-                          <li><a class="dropdown-item" href="{% url 'orderhistory' %}">Order History</a></li>
-                          <li><a class="dropdown-item" href="{% url 'update_info' %}">User Info</a></li>
-                          
-                          {% if user.userprofile.account_type == 'Seller' %}
-                          <li><hr class="dropdown-divider" /></li>                          
-                          <li><a class="dropdown-item" href="{% url 'add_product' %}">Add Product</a></li>
-                          <li><a class="dropdown-item" href="{% url 'viewlistings' %}">View Listings</a></li>
-                          <li><a class="dropdown-item" href="{% url 'earning' %}">View Earning</a></li>
-                          {% endif %}
 
-                          <li><hr class="dropdown-divider"></li>
-                          <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                            <li><a class="dropdown-item" href="{% url 'update_user' %}">Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'update_info' %}">User Info</a></li>
+
+                            {% if user.is_staff %}
+
+                                <li><a class="dropdown-item" href="{% url 'account_approval' %}">Account Approvals</a></li>
+                                <li><a class="dropdown-item" href="#">Product Approvals</a></li>
+
+                        
+                            {% else %}
+
+                                <li><a class="dropdown-item" href="{% url 'orderhistory' %}">Order History</a></li>
+                          
+                                {% if user.userprofile.account_type == 'Seller' %}
+                                <li><hr class="dropdown-divider" /></li>                          
+                                <li><a class="dropdown-item" href="{% url 'add_product' %}">Add Product</a></li>
+                                <li><a class="dropdown-item" href="{% url 'viewlistings' %}">View Listings</a></li>
+                                <li><a class="dropdown-item" href="{% url 'earning' %}">View Earning</a></li>
+                                {% endif %}
+
+                            {% endif %}
+
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                         </ul>
                     </li>
 
