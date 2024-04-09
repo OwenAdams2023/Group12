@@ -420,3 +420,29 @@ def account_action(request):
         user.userprofile.save()
         return response
 
+def product_approval(request):
+
+    pending_product = Product.objects.filter(Product__approved__isnull=True)
+
+    return render(request, 'pending_account_approval.html', {'products':pending_product})
+
+def product_action(request):
+
+    if request.POST.get('action') == 'post':
+        product_id = int(request.POST.get('product_id'))
+        admin_action = request.POST.get('admin_action')
+
+        product= Product.objects.get(pk=product_id)
+
+        if admin_action == "reject":
+            product.approved = False
+            response = JsonResponse({'product': product_id})
+            messages.success(request, ("Product creation has been rejected. User has been removed."))
+
+        elif admin_action == "approve":
+            product.approved = True
+            response = JsonResponse({'product': product_id})
+            messages.success(request, ("Product creation has been approved"))
+
+        product.save()
+        return response
