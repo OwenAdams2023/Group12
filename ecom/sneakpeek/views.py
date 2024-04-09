@@ -26,7 +26,7 @@ def home(request):
     else:
         is_seller = False
 
-    products = Product.objects.all()
+    products = Product.objects.filter(approved=True)
     #return render(request, 'product.html',{'products':products})
 
     #return render(request, "home1.html")

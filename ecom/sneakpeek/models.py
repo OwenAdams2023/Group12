@@ -63,6 +63,7 @@ class Product(models.Model):
     brand = models.CharField(max_length=100, null=True)
     description = models.CharField(max_length=250, default='', blank=True, null=True)
     image = models.ImageField(upload_to='uploads/product/')
+    approved = models.BooleanField(null=True)
     
     #sale stuff
     #is_sale = models.BooleanField(default=False)
