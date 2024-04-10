@@ -12,29 +12,37 @@
 <br/>
 
 <div class="container" style="width: 40%; margin: 0 auto; text-align: center;">
-    {% for product in products %}
-    <div class="card mb-3" style="max-width: 540px;">
-        <div class="row g-0">
-        <div class="col-md-4">
-            <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="...">
-        </div>
-        <div class="col-md-8">
-            <div class="card-body">
-            <h5 class="card-title">Posted by: {{ product.seller }}</h5>
-            <p class="card-text">Name: {{ product.name }}</p>
-            <p class="card-text">Price: ${{ product.price }}</p>
-            <p class="card-text"> Quantity: {{ product.quantity }}</p>
-            <p class="card-text"> Seller's Description: {{ product.description }}</p>
-            <button type="button" data-index="{{product.id}}" data-another-index="approve" class="btn btn-secondary action">Approve</button>
-            <button type="button" data-index="{{product.id}}" data-another-index="reject" class="btn btn-danger action">Reject</button>
+    {% if products %}
+        {% for product in products %}
+        <div class="card mb-3" style="max-width: 540px;">
+            <div class="row g-0">
+            <div class="col-md-4">
+                <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="...">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                <h5 class="card-title">Posted by: {{ product.seller }}</h5>
+                <p class="card-text">Name: {{ product.name }}</p>
+                <p class="card-text">Price: ${{ product.price }}</p>
+                <p class="card-text"> Quantity: {{ product.quantity }}</p>
+                <p class="card-text"> Seller's Description: {{ product.description }}</p>
+                <button type="button" data-index="{{product.id}}" data-another-index="approve" class="btn btn-secondary action">Approve</button>
+                <button type="button" data-index="{{product.id}}" data-another-index="reject" class="btn btn-danger action">Reject</button>
+                </div>
+            </div>
             </div>
         </div>
-        </div>
-    </div>
-</br>
-    {% endfor %}
+        </br>
+        {% endfor %}
+    
+    {% else %}
+    </br></br>
+        <h3>There is no pending product approvals at the moment.</h3>
+    {% endif %}
 
 </div>
+
+</br></br></br></br></br></br></br></br></br></br></br></br></br></br>
 
 <script>
     $(document).on('click', '.action', function(e){

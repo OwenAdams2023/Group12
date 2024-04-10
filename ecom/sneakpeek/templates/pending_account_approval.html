@@ -11,31 +11,38 @@
 </header>
 <br/>
 
-<div class="container" style="width: 40%; margin: 0 auto;">
-    {% for account in accounts %}
 
-    <div class="card text-center">
-        <div class="card-header" style="font-weight: bold;">
-            {{ account.userprofile.account_type }}
-        </div>
-        <div class="card-body">
-          <h6 class="card-title"> Username: {{ account.username }}</h6>
-          <p class="card-text">Name: {{ account.first_name }} {{ account.last_name }}</p>
-          <p class="card-text">Email: {{ account.email }}</p>
-          <button type="button" data-index="{{account.id}}" data-another-index="approve" class="btn btn-secondary action">Approve</button>
-          <button type="button" data-index="{{account.id}}" data-another-index="reject" class="btn btn-danger action">Reject</button>
+<div class="container" style="width: 40%; margin: 0 auto; text-align: center;">
+    {% if accounts %}
+        {% for account in accounts %}
 
-        </div>
-        <div class="card-footer text-body-secondary">
-          Joined: {{ account.date_joined }}
-        </div>
-      </div>
-      
-    </br>
+        <div class="card text-center">
+            <div class="card-header" style="font-weight: bold;">
+                {{ account.userprofile.account_type }}
+            </div>
+            <div class="card-body">
+            <h6 class="card-title"> Username: {{ account.username }}</h6>
+            <p class="card-text">Name: {{ account.first_name }} {{ account.last_name }}</p>
+            <p class="card-text">Email: {{ account.email }}</p>
+            <button type="button" data-index="{{account.id}}" data-another-index="approve" class="btn btn-secondary action">Approve</button>
+            <button type="button" data-index="{{account.id}}" data-another-index="reject" class="btn btn-danger action">Reject</button>
 
-      {% endfor %}
+            </div>
+            <div class="card-footer text-body-secondary">
+            Joined: {{ account.date_joined }}
+            </div>
+        </div>       
+        </br>
+        {% endfor %}
+
+    {% else %}
+        <h3>There is no pending account approvals at the moment.</h3>
+    {% endif %}
+
 
 </div>
+
+</br></br></br></br></br></br></br></br></br></br></br></br></br></br>
 
 <script>
     $(document).on('click', '.action', function(e){
