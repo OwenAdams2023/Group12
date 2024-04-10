@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm, SetPassw
 from django.core.validators import MinValueValidator
 from django.db.models.functions import Lower
 from django import forms
-from .models import Product, ShippingAddress, ReturnRequest, UserProfile, Order, Category
+from .models import Product, ReturnRequest, UserProfile, Order, Category
 
 class SignUpForm(UserCreationForm):
 	email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email Address'}))
@@ -49,50 +49,6 @@ class ProductForm(forms.ModelForm):
 		fields = ('name', 'price', 'quantity', 'category', 'brand', 'image', 'description')
 
 		exclude = ('seller', )
-
-
-#need to complete
-"""
-class ShippingForm(forms.ModelForm):
-
-	class Meta:
-		model = ShippingAddress
-		fields = ('shipping_full_name', 'shipping_email', 'shipping_address1', 'shipping_address2', 'shipping_city', 'shipping_state', 'shipping_zipcode', 'shipping_country')
-
-		exclude = ('user', )"""
-
-class ShippingAddressForm(forms.ModelForm):
-    class Meta:
-        model = ShippingAddress
-        fields = ('shipping_full_name', 'shipping_email', 'shipping_address1', 'shipping_address2', 'shipping_city', 'shipping_state', 'shipping_zipcode', 'shipping_country')
-
-    def __init__(self, *args, **kwargs):
-        super(ShippingAddressForm, self).__init__(*args, **kwargs)
-        self.fields['user'].widget = forms.HiddenInput()  # Assuming you don't want the user to modify this field
-        
-        # Conditionally set fields as required
-        if self.instance and self.instance.user:
-            self.fields['shipping_email'].required = True
-            self.fields['shipping_address1'].required = True
-            self.fields['shipping_city'].required = True
-            self.fields['shipping_state'].required = True
-            self.fields['shipping_zipcode'].required = True
-            self.fields['shipping_country'].required = True
-
-"""
-class OrderForm(forms.ModelForm):
-    class Meta:
-        model = Order
-        fields = ['full_name', 'email', 'shipping_address', 'billing_address',]
-
-    def __init__(self, *args, **kwargs):
-        super(OrderForm, self).__init__(*args, **kwargs)
-        #self.fields['product'].widget.attrs['readonly'] = True  # Assuming product should not be editable in the form
-        self.fields['shipping_address'].required = True
-        self.fields['billing_address'].required = True
-        self.fields['card_number'].required = True
-        self.fields['cvv'].required = True
-        self.fields['expiration'].required = True"""
 	    
 class ReturnForm(forms.ModelForm):
     class Meta:

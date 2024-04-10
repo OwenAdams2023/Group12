@@ -32,19 +32,6 @@ def create_profile(sender, instance, created, **kwargs):
 # Automate profile saving with every instance of User Created
 post_save.connect(create_profile, sender=User)
 
-#might not need this
-class Account(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    phone = models.CharField(max_length=50)
-    email = models.EmailField(max_length=50)
-    username = models.CharField(max_length=50)
-    password = models.CharField(max_length=50)
-    account_type = models.CharField(max_length=20, choices=(('buyer', 'Buyer'), ('seller', 'Seller')), blank=True, null=True)
-
-    def __str__(self):
-        return f'{self.first_name} {self.last_name}' 
-
 class Category(models.Model):
     product_type = models.CharField(max_length=50)
 
@@ -64,10 +51,6 @@ class Product(models.Model):
     description = models.CharField(max_length=250, default='', blank=True, null=True)
     image = models.ImageField(upload_to='uploads/product/')
     approved = models.BooleanField(null=True)
-    
-    #sale stuff
-    #is_sale = models.BooleanField(default=False)
-    #sale_price= models.DecimalField(default=0,decimal_places=2,max_digits=6)
 
     def __str__(self):
         return self.name
@@ -98,23 +81,6 @@ class OrderItem(models.Model):
     def __str__(self):
         return f'OrderItem - {str(self.id)}'
 
-
-class ShippingAddress(models.Model):
-    user = models.ForeignKey(User, on_delete = models.CASCADE, null=True, blank=True)
-    shipping_full_name = models.CharField(max_length= 255)
-    shipping_email = models.CharField(max_length= 255)
-    shipping_address1 = models.CharField(max_length= 255)
-    shipping_address2 = models.CharField(max_length= 255, null=True, blank=True)
-    shipping_city = models.CharField(max_length= 255)
-    shipping_state = models.CharField(max_length= 255, null=True, blank=True)
-    shipping_zipcode = models.CharField(max_length= 255, null=True, blank=True)
-    shipping_country = models.CharField(max_length= 255)
-    
-    class Meta:
-        verbose_name_plural = "Shipping Address"
-    
-    def __str__self(self):
-        return f'Shipping Adress - {str(self.id)}'
 
 class ReturnRequest(models.Model):
     order = models.ForeignKey(OrderItem, on_delete=models.CASCADE)

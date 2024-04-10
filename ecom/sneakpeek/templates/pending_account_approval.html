@@ -15,11 +15,11 @@
     {% for account in accounts %}
 
     <div class="card text-center">
-        <div class="card-header">
+        <div class="card-header" style="font-weight: bold;">
             {{ account.userprofile.account_type }}
         </div>
         <div class="card-body">
-          <h5 class="card-title">{{ account.username }}</h5>
+          <h6 class="card-title"> Username: {{ account.username }}</h6>
           <p class="card-text">Name: {{ account.first_name }} {{ account.last_name }}</p>
           <p class="card-text">Email: {{ account.email }}</p>
           <button type="button" data-index="{{account.id}}" data-another-index="approve" class="btn btn-secondary action">Approve</button>
@@ -42,11 +42,11 @@
 
         var anotherIndexValue = $(this).data('another-index');
         if (anotherIndexValue === 'reject') {
-            var confirmation = confirm("Rejecting this account will delete it from the database. Are you sure you want to take this action?");
+            var confirmation = confirm("Are you sure you want to reject this account?");
         }
 
         else if (anotherIndexValue === 'approve'){
-            var confirmation = confirm("Approving this account will allow it to access the store functionalities. Are you sure you want to take this action?");
+            var confirmation = confirm("Are you sure you want to approve this action?");
         }
         
         if (confirmation) {

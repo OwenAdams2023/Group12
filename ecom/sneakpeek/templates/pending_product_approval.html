@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<header class="bg-dark py-3">
+  <div class="container px-4 px-lg-5 my-3">
+      <div class="text-center text-white">
+          <h1 class="display-4 fw-bolder">Product Approvals</h1>
+          <p class="lead fw-normal text-white-50 mb-0">View pending product approvals</p>
+      </div>
+  </div>
+</header>
+<br/>
+
+<div class="container" style="width: 40%; margin: 0 auto; text-align: center;">
+    {% for product in products %}
+    <div class="card mb-3" style="max-width: 540px;">
+        <div class="row g-0">
+        <div class="col-md-4">
+            <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="...">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+            <h5 class="card-title">Posted by: {{ product.seller }}</h5>
+            <p class="card-text">Name: {{ product.name }}</p>
+            <p class="card-text">Price: ${{ product.price }}</p>
+            <p class="card-text"> Quantity: {{ product.quantity }}</p>
+            <p class="card-text"> Seller's Description: {{ product.description }}</p>
+            <button type="button" data-index="{{product.id}}" data-another-index="approve" class="btn btn-secondary action">Approve</button>
+            <button type="button" data-index="{{product.id}}" data-another-index="reject" class="btn btn-danger action">Reject</button>
+            </div>
+        </div>
+        </div>
+    </div>
+</br>
+    {% endfor %}
+
+</div>
+
+<script>
+    $(document).on('click', '.action', function(e){
+
+        var anotherIndexValue = $(this).data('another-index');
+        if (anotherIndexValue === 'reject') {
+            var confirmation = confirm("Are you sure you want to reject this product?");
+        }
+
+        else if (anotherIndexValue === 'approve'){
+            var confirmation = confirm("Are you sure you want to approve this product?");
+        }
+        
+        if (confirmation) {
+            $.ajax({
+            type: 'POST',
+            url: '{% url 'product_action' %}',
+            data: {
+                product_id: $(this).data('index'),
+                admin_action: $(this).data('another-index'),
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action: 'post'
+            },
+            success: function(json){
+                location.reload();
+            },
+        
+            error: function(xhr, errmsg, err){
+
+            }
+        });
+        }
+
+        else {
+            alert("Action cancelled.");
+        }
+    
+    })
+
+</script>
+
+
+{% endblock %}

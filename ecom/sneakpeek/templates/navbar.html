@@ -22,7 +22,7 @@
                             {% if user.is_staff %}
 
                                 <li><a class="dropdown-item" href="{% url 'account_approval' %}">Account Approvals</a></li>
-                                <li><a class="dropdown-item" href="#">Product Approvals</a></li>
+                                <li><a class="dropdown-item" href="{% url 'product_approval' %}">Product Approvals</a></li>
 
                         
                             {% else %}

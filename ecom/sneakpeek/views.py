@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from .forms import SignUpForm, ProductForm, ShippingAddressForm, ReturnForm, UpdateUserForm, UpdatePasswordForm, UpdateUserInfoForm, UpdateProductInfoForm
+from .forms import SignUpForm, ProductForm, ReturnForm, UpdateUserForm, UpdatePasswordForm, UpdateUserInfoForm, UpdateProductInfoForm
 from django import forms
 from .models import UserProfile, Category, Product, Order, OrderItem, ReturnRequest
 import json
@@ -19,18 +19,10 @@ def home(request):
     
     if request.user.is_authenticated:
         current_user = request.user
-        is_seller = current_user.userprofile.account_type == 'Seller'
-        #context = {'is_seller': is_seller}
-        #return render(request, "home1.html", context)
-
-    else:
-        is_seller = False
 
     products = Product.objects.filter(approved=True)
-    #return render(request, 'product.html',{'products':products})
 
-    #return render(request, "home1.html")
-    return render(request, "home.html", {'products':products, 'is_seller':is_seller})
+    return render(request, "home.html", {'products':products})
 
 def search(request):
 
@@ -187,8 +179,10 @@ def update_user(request):
 
 def product(request,pk):
     product = Product.objects.get(id=pk)
+    cat = product.category
+    similar_products = Product.objects.filter(category=cat, approved=True).exclude(id=pk)
     #products = Product.objects.all()
-    return render(request, 'product.html',{'product':product})
+    return render(request, 'product.html',{'product':product, 'similar_products':similar_products})
 
 def update_earning(request):
 
@@ -233,7 +227,8 @@ def add_product(request):
 
         else:
             form = ProductForm()
-        
+
+    messages.success(request, ("Your product listing has been sent for approval"))  
     return render(request, 'add_product.html', {'form': form})
 
 #need to work on checkout
@@ -351,6 +346,7 @@ def product_delete(request):
         response = JsonResponse({'product': product_id})
         messages.success(request, ("Product listing removed from the site"))
         return response
+    
 
 def product_update(request,pk):
 
@@ -422,9 +418,9 @@ def account_action(request):
 
 def product_approval(request):
 
-    pending_product = Product.objects.filter(Product__approved__isnull=True)
+    pending_product = Product.objects.filter(approved__isnull=True)
 
-    return render(request, 'pending_account_approval.html', {'products':pending_product})
+    return render(request, 'pending_product_approval.html', {'products':pending_product})
 
 def product_action(request):
 
