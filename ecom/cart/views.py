@@ -25,11 +25,11 @@ def cart_add(request):
     if request.POST.get('action') == 'post':
         product_id = int(request.POST.get('product_id'))
         product_qty = int(request.POST.get('product_qty'))
-        #size = int(request.POST.get('product_size'))
+        product_size = float(request.POST.get('product_size'))
 
         #get product in DB based on product id
         product = get_object_or_404(Product,id=product_id)
-        cart.add(product=product, quantity=product_qty)
+        cart.add(product=product, quantity=product_qty, size=product_size)
         cart_quantity = cart.__len__()
 
         #response= JsonResponse({'Product Name:' : product.name})
@@ -66,8 +66,9 @@ def cart_update(request):
     if request.POST.get('action') == 'post':
         product_id = int(request.POST.get('product_id'))
         product_qty = int(request.POST.get('product_qty'))
+        product_size = float(request.POST.get('product_size'))
 
-        cart.update(product=product_id, quantity=product_qty)
+        cart.update(product=product_id, quantity=product_qty, size=product_size)
         
         response = JsonResponse({'qty': product_qty})
         messages.success(request, ("Shopping Cart has been updated"))

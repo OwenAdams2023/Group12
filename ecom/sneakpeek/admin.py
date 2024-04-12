@@ -1,10 +1,11 @@
 from django.contrib import admin
-from .models import Category, Product, Order, OrderItem, UserProfile, ReturnRequest
+from .models import Category, Product, Order, OrderItem, UserProfile, ReturnRequest, Size
 from django.contrib.auth.models import User
 
 
 # Register your models here.
 admin.site.register(Category)
+admin.site.register(Size)
 admin.site.register(Order)
 admin.site.register(OrderItem)
 admin.site.register(UserProfile)

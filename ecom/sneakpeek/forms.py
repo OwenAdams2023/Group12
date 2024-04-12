@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm, SetPassw
 from django.core.validators import MinValueValidator
 from django.db.models.functions import Lower
 from django import forms
-from .models import Product, ReturnRequest, UserProfile, Order, Category
+from .models import Product, ReturnRequest, UserProfile, Order, Category, Size
 
 class SignUpForm(UserCreationForm):
 	email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email Address'}))
@@ -38,15 +38,16 @@ class ProductForm(forms.ModelForm):
 
 	name = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Product Name'}), required=True)
 	price = forms.DecimalField(label="", widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Price'}), required=True)
+	size = forms.ModelChoiceField(label="", queryset=Size.objects.all().order_by(Lower('size_num')), widget=forms.Select(attrs={'class': 'form-control', 'placeholder': 'Size'}), empty_label="Size", required=True)
 	quantity = forms.IntegerField(label="", widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Quantity'}), required=True)
-	category = forms.ModelChoiceField(label="", queryset=Category.objects.all().order_by(Lower('product_type')), widget=forms.Select(attrs={'class': 'form-control', 'placeholder': 'Category'}), required=True)
+	category = forms.ModelChoiceField(label="", queryset=Category.objects.all().order_by(Lower('product_type')), widget=forms.Select(attrs={'class': 'form-control', 'placeholder': 'Category'}), empty_label="Category", required=True)
 	brand = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Brand'}), required=True)
 	image = forms.ImageField(label="", widget=forms.FileInput(attrs={'class': 'form-control-file'}), required=True)
 	description = forms.CharField(label="", widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Description'}), required=True)
 	
 	class Meta:
 		model = Product
-		fields = ('name', 'price', 'quantity', 'category', 'brand', 'image', 'description')
+		fields = ('name', 'price', 'size', 'quantity', 'category', 'brand', 'image', 'description')
 
 		exclude = ('seller', )
 	    

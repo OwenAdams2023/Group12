@@ -84,7 +84,7 @@
 </div>
 
 </br></br>
-<h4 style="text-align: center; color: #333; font-family: Arial, sans-serif;">Explore Similar Products</h4>
+<h3>Explore Similar Products</h3>
 
 <section class="py-5">
   <div class="container px-4 px-lg-5 mt-5">
@@ -135,7 +135,7 @@ $(document).on('click', '#add-cart', function(e){
         data: {
     product_id: $('#add-cart').val(),
     product_qty: $('#qty-cart option:selected').text(),
-    product_size: $('size-cart option:selected').text(),
+    product_size: $('#size-cart option:selected').text(),
     csrfmiddlewaretoken: '{{ csrf_token }}',
     action: 'post'
         },

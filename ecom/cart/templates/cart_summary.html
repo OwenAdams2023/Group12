@@ -34,11 +34,11 @@
           <div class="row justify-content-center">
             <div class="col-md-2">Quantity:</div>
               <div class="col-md-2">
-              <select class="form-select form-select-sm" id="select{{product.id}}">
+              <select class="form-select form-select-sm" id="1select{{product.id}}">
                   
-              {% for key, value in quantities.items %}
+              {% for key, info in quantities.items %}
                 {% if key == product.id|slugify %}
-                  <option selected>{{ value }}</option>
+                  <option selected>{{ info.quantity }}</option>
                 {% endif %}
               {% endfor %}
               
@@ -50,16 +50,38 @@
                 </select>
               </div>
           </div>
+          <br/>
+          <div class="row justify-content-center">
+            <div class="col-md-2">Size:</div>
+              <div class="col-md-2">
+              <select class="form-select form-select-sm" id="2select{{product.id}}">
+                  
+              {% for key, info in quantities.items %}
+                {% if key == product.id|slugify %}
+                  <option selected>{{ info.size }}</option>
+                {% endif %}
+              {% endfor %}
+              
+                  <option value="1">6</option>
+                  <option value="2">6.5</option>
+                  <option value="3">7</option>
+                  <option value="4">7.5</option>
+                  <option value="5">8</option>
+                  <option value="5">8.5</option>
+                </select>
+              </div>
+          </div>
+
           <br/><br/>
         <a href="{% url 'home'%}" class="btn btn-secondary">Home</a>
         <button type="button" data-index="{{product.id}}" class="btn btn-secondary update-cart">Update</button>
         <button type="button" data-index="{{product.id}}" class="btn btn-danger delete-product">Remove</button>
         
-    </center>
+          </center>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
 
 
 
@@ -74,7 +96,7 @@
         	<h3>There's Nothing In Your Cart...</h3>
         	<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
         {% endif %}
-    	</div>
+    </div>
 
 
 
@@ -91,7 +113,8 @@ $(document).on('click', '.update-cart', function(e){
     url: '{% url 'cart_update' %}',
     data: {
       product_id: $(this).data('index'),
-      product_qty: $('#select' + productid + ' option:selected').text(),
+      product_qty: $('#1select' + productid + ' option:selected').text(),
+      product_size: $('#2select' + productid + ' option:selected').text(),
       csrfmiddlewaretoken: '{{ csrf_token }}',
       action: 'post'
     },

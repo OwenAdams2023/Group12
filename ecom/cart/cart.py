@@ -16,15 +16,18 @@ class Cart():
         self.cart = cart
 
     #add to cart from the saved database
-    def db_add(self,product,quantity):
+    
+    def db_add(self,product,quantity,size):
         product_id = str(product)
         product_qty = str(quantity)
+        product_size= str(size)
 
         if product_id in self.cart:
             pass
         else:
             #self.cart[product_id]= {'price': str(product.price)}
-            self.cart[product_id]= int(product_qty)
+            self.cart[product_id] = {'quantity': int(product_qty), 'size': float(product_size)}
+            #self.cart[product_id]= int(product_qty)
 
         self.session.modified = True
 
@@ -36,22 +39,24 @@ class Cart():
             cart_string = cart_string.replace ("\'", "\"")
 
             current_user.update(old_cart=str(cart_string))
+    
 
-
-    def add(self,product,quantity):
+    def add(self,product,quantity,size):
         product_id = str(product.id)
         product_qty = str(quantity)
-        #product_size = str(size)
+        product_size = str(size)
 
         if product_id in self.cart:
             pass
         else:
             #self.cart[product_id]= {'price': str(product.price)}
-            self.cart[product_id]= int(product_qty)
+            self.cart[product_id] = {'quantity': int(product_qty), 'size': float(product_size)}
+            #self.cart[product_id]= int(product_qty)
 
         self.session.modified = True
 
         # if user logged in
+        
         if self.request.user.is_authenticated:
             current_user = UserProfile.objects.filter(user__id=self.request.user.id)
 
@@ -62,8 +67,7 @@ class Cart():
 
             #save the cart string to userprofile
             current_user.update(old_cart= str(cart_string))
-
-
+            
 
     def __len__(self):
         return len(self.cart)
@@ -79,13 +83,14 @@ class Cart():
         quantities = self.cart
         return quantities
 
-    def update(self,product,quantity):
+    def update(self,product,quantity,size):
         product_id = str(product)
-        product_qty = int(quantity)
+        product_qty = str(quantity)
+        product_size = str(size)
 
         #get cart and update quantity for product id
         ourcart = self.cart
-        ourcart[product_id]= product_qty
+        ourcart[product_id]= {'quantity': int(product_qty), 'size': float(product_size)}
 
         self.session.modified = True
 
@@ -141,19 +146,14 @@ class Cart():
         quantities = self.cart
 
         total = 0
-        for key, value in quantities.items():
+        for product_key, product_info in quantities.items():
 
-            key = int(key)
+            p_key = int(product_key)
+            quantity = int(product_info.get('quantity'))
             for product in products: 
-                if product.id == key:
-                    """
-                    if product.is_sale:
-                        total = total + (product.sale_price *value)
-                    else: 
-                        total = total + (product.price *value)
-                    """
-					
-                    total = total + (product.price * value)
+                if product.id == p_key:
+			
+                    total = total + (product.price * quantity)
 					
                                     
         return total 

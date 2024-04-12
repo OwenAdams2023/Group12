@@ -89,8 +89,10 @@ def login_user(request):
                 if saved_cart:
                     converted_cart = json.loads(saved_cart)
                     cart = Cart(request)
-                    for key,value in converted_cart.items():
-                        cart.db_add(product=key, quantity= value)
+                    for product_id, product_info in converted_cart.items():
+                        quantity = product_info.get('quantity')
+                        size = product_info.get('size')
+                        cart.db_add(product=product_id, quantity=quantity, size=size)
 
                 messages.success(request, ("You have been logged in"))
                 return redirect('home')
@@ -228,7 +230,8 @@ def add_product(request):
         else:
             form = ProductForm()
 
-    messages.success(request, ("Your product listing has been sent for approval"))  
+        messages.success(request, ("Your product listing has been sent for approval"))  
+
     return render(request, 'add_product.html', {'form': form})
 
 #need to work on checkout
@@ -255,9 +258,10 @@ def checkout(request):
 
             for product in cart_products:
                 product_id = product.id
-                for prod_id, quantity in quantities.items():
+                for prod_id, prod_info in quantities.items():
                     if int(prod_id) == product_id:
-                        
+
+                        quantity = prod_info.get('quantity')                    
                         product = Product.objects.get(pk=product_id)
                         warehouse_qty = product.quantity
                         if (warehouse_qty < quantity):
@@ -280,15 +284,18 @@ def checkout(request):
             #save to orderitem model
             for product in cart_products:
                 product_id = product.id
-                for prod_id, quantity in quantities.items():
+                for prod_id, prod_info in quantities.items():
                     if int(prod_id) == product_id:
                         seller_id=product.seller.id
+                        quantity = prod_info.get('quantity')
+                        size = prod_info.get('size')
 
                         orderitem = OrderItem.objects.create(
                             order=order,
                             product=product,
                             customer=user,
                             seller_id=seller_id,
+                            size=size,
                             quantity=quantity,
                             price=product.price
                         )
@@ -406,7 +413,7 @@ def account_action(request):
         if admin_action == "reject":
             user.userprofile.approved = False
             response = JsonResponse({'user': user_id})
-            messages.success(request, ("User profile creation has been rejected. User has been removed."))
+            messages.success(request, ("User profile creation has been rejected."))
 
         elif admin_action == "approve":
             user.userprofile.approved = True
@@ -433,7 +440,7 @@ def product_action(request):
         if admin_action == "reject":
             product.approved = False
             response = JsonResponse({'product': product_id})
-            messages.success(request, ("Product creation has been rejected. User has been removed."))
+            messages.success(request, ("Product creation has been rejected."))
 
         elif admin_action == "approve":
             product.approved = True
