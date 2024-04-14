@@ -29,7 +29,7 @@ def search(request):
     if request.method == "POST":
         searched = request.POST['searched']
         # seach regardless of case
-        searched = Product.objects.filter(Q(name__icontains=searched) | Q(description__icontains=searched))
+        searched = Product.objects.filter((Q(name__icontains=searched) | Q(description__icontains=searched) | Q(brand__icontains=searched) | Q(category__product_type__icontains=searched)) & Q(approved=True))
         if not searched:
              messages.success(request, ("Your item can not be found... Please Try Again "))
              return render(request, "search.html",{})
