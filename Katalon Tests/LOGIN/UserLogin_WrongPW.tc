@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>User inputs a password that does not exist in the database</description>
+   <name>UserLogin_WrongPW</name>
+   <tag></tag>
+   <comment></comment>
+   <testCaseGuid>cdb312fd-7ec6-4098-9461-3f7d3c4b07d7</testCaseGuid>
+</TestCaseEntity>

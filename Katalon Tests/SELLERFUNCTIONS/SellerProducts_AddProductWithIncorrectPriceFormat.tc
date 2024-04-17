@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>SellerProducts_AddProductWithIncorrectPriceFormat</name>
+   <tag></tag>
+   <comment></comment>
+   <testCaseGuid>44e90027-61d5-40d9-9c0c-870527324f7e</testCaseGuid>
+</TestCaseEntity>

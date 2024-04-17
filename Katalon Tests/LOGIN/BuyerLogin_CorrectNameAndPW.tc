@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>BuyerLogin_CorrectNameAndPW</name>
+   <tag></tag>
+   <comment></comment>
+   <testCaseGuid>19534c7b-0596-4294-9c07-5fb36f04b16e</testCaseGuid>
+</TestCaseEntity>

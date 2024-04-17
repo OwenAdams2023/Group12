@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>SellerProducts_AddProductWithNoBrand</name>
+   <tag></tag>
+   <comment></comment>
+   <testCaseGuid>c043d33f-7077-479e-a105-20aa88d09caf</testCaseGuid>
+</TestCaseEntity>

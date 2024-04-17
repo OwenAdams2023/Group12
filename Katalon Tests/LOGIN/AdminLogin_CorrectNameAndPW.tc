@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>AdminLogin_CorrectNameAndPW</name>
+   <tag></tag>
+   <comment></comment>
+   <testCaseGuid>604105c2-f736-4565-b4bd-1f9ca3decc11</testCaseGuid>
+</TestCaseEntity>

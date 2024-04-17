@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>UserLogin_WrongNameANDPW</name>
+   <tag></tag>
+   <comment></comment>
+   <testCaseGuid>cd17d0dc-8eb6-44a4-804e-435202bc1751</testCaseGuid>
+</TestCaseEntity>
