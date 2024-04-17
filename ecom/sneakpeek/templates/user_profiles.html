@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Update Information</h1>
+            <p class="lead fw-normal text-white-50 mb-0">Update User Information</p>
+        </div>
+    </div>
+</header>
+
+</br></br>
+
+
+
+<div class="container text-center">
+
+    <div class="row">
+        <div class="col" style="border: 1px solid black; padding: 10px; border-right: none; ">
+            <b>User ID</b>
+        </div>
+        <div class="col" style="border: 1px solid black; padding: 10px;border-right: none;">
+            <b>Account Type</b>
+        </div>
+        <div class="col" style="border: 1px solid black; padding: 10px;border-right: none;">
+            <b>Username</b>
+        </div>
+        <div class="col" style="border: 1px solid black; padding: 10px;border-right: none;">
+            <b>Full Name</b>
+        </div>
+        <div class="col" style="border: 1px solid black; padding: 10px;">
+            <b>Email</b>
+        </div>
+    </div>
+
+    {% for profile in profiles %}
+
+            <div class="row">
+                <div class="col" style="border: 1px solid black; padding: 10px; border-right: none; border-top: none">
+                    {{ profile.id }}
+                </div>
+                <div class="col" style="border: 1px solid black; padding: 10px;border-right: none; border-top: none">
+                    {{ profile.userprofile.account_type }}
+                </div>
+                <div class="col" style="border: 1px solid black; padding: 10px;border-right: none; border-top: none">
+                    {{ profile.username }}
+                </div>
+                <div class="col" style="border: 1px solid black; padding: 10px;border-right: none; border-top: none">
+                    {{ profile.first_name}} {{profile.last_name}}
+                </div>
+                <div class="col" style="border: 1px solid black; padding: 10px; border-top: none">
+                    {{ profile.email }}
+                </div>
+            </div>
+
+    {% endfor %}
+
+</div>
+
+</br></br></br>
+
+        		
+
+  {% endblock %}

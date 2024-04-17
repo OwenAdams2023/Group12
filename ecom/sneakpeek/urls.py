@@ -27,4 +27,5 @@ urlpatterns = [
     path('account_action/', views.account_action, name='account_action'),
     path('product_approval/', views.product_approval, name='product_approval'),
     path('product_action/', views.product_action, name='product_action'),
+    path('user_profiles/', views.user_profiles, name='user_profiles'),
 ]

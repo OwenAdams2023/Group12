@@ -330,15 +330,29 @@ def checkout(request):
 
 def order_history(request):
 
-    current_user = request.user
-    user_orders = OrderItem.objects.filter(customer=current_user)
+    if request.POST.get('action') == 'post':
+        user_id = int(request.POST.get('user_id'))
+        customer = User.objects.get(id=user_id) 
+        user_orders = OrderItem.objects.filter(customer=customer)
+        messages.success(request, ("Successfully got the request"))
+
+
+    else:
+        current_user = request.user
+        user_orders = OrderItem.objects.filter(customer=current_user)
 
     return render(request, "order_history.html", {'user_orders': user_orders})
 
 def product_list(request):
 
-    current_user = request.user
-    user_products = Product.objects.filter(seller=current_user)
+    if request.POST.get('action') == 'post':
+        user_id = int(request.POST.get('user_id'))
+        seller = User.objects.get(id=user_id) 
+        user_products = Product.objects.filter(seller=seller)
+
+    else:
+        current_user = request.user
+        user_products = Product.objects.filter(seller=current_user)
 
     return render(request, "product_list.html", {'user_products': user_products})
 
@@ -365,6 +379,8 @@ def product_update(request,pk):
         if form.is_valid():
             form.save()
             messages.success(request, "Your information has been updated!")
+            product.approved = None
+            product.save()
     
     return render(request, "update_product_info.html", {'form':form, 'product':product})
     
@@ -449,3 +465,9 @@ def product_action(request):
 
         product.save()
         return response
+
+def user_profiles(request):
+
+    profiles = User.objects.filter(userprofile__approved=True).order_by('userprofile__account_type')
+
+    return render(request, 'user_profiles.html', {'profiles':profiles})
