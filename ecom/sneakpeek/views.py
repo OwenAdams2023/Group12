@@ -328,31 +328,19 @@ def checkout(request):
 
     return render(request, "checkout.html", {"cart_products": cart_products, "quantities":quantities, "totals":totals })
 
-def order_history(request):
+def order_history(request,pk):
 
-    if request.POST.get('action') == 'post':
-        user_id = int(request.POST.get('user_id'))
-        customer = User.objects.get(id=user_id) 
-        user_orders = OrderItem.objects.filter(customer=customer)
-        messages.success(request, ("Successfully got the request"))
-
-
-    else:
-        current_user = request.user
-        user_orders = OrderItem.objects.filter(customer=current_user)
+    #current_user = request.user
+    current_user = User.objects.get(id=pk)
+    user_orders = OrderItem.objects.filter(customer=current_user)
 
     return render(request, "order_history.html", {'user_orders': user_orders})
 
-def product_list(request):
+def product_list(request,pk):
 
-    if request.POST.get('action') == 'post':
-        user_id = int(request.POST.get('user_id'))
-        seller = User.objects.get(id=user_id) 
-        user_products = Product.objects.filter(seller=seller)
-
-    else:
-        current_user = request.user
-        user_products = Product.objects.filter(seller=current_user)
+    #current_user = request.user
+    current_user = User.objects.get(id=pk)
+    user_products = Product.objects.filter(seller=current_user)
 
     return render(request, "product_list.html", {'user_products': user_products})
 

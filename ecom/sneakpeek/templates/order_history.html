@@ -28,7 +28,10 @@
                   <p class="card-text"><small class="text-body-secondary">Size: {{ order.size }}</small></p>
                   <p class="card-text"><small class="text-body-secondary">Quantity: {{ order.quantity }}</small></p>
                   <p class="card-text"><small class="text-body-secondary">Order ID: #{{ order.order.id }}</small></p>
-                  <a href="{% url 'return_request' order.id %}" class="btn btn-secondary">Return Order</a>
+
+                  {% if not user.is_staff %}
+                    <a href="{% url 'return_request' order.id %}" class="btn btn-secondary">Return Order</a>
+                  {% endif %}
                 </div>
               </div>
             </div>

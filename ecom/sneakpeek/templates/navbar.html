@@ -28,12 +28,12 @@
                         
                             {% else %}
 
-                                <li><a class="dropdown-item" href="{% url 'orderhistory' %}">Order History</a></li>
+                                <li><a class="dropdown-item" href="{% url 'orderhistory' user.id %}">Order History</a></li>
                           
                                 {% if user.userprofile.account_type == 'Seller' %}
                                 <li><hr class="dropdown-divider" /></li>                          
                                 <li><a class="dropdown-item" href="{% url 'add_product' %}">Add Product</a></li>
-                                <li><a class="dropdown-item" href="{% url 'viewlistings' %}">View Listings</a></li>
+                                <li><a class="dropdown-item" href="{% url 'viewlistings' user.id %}">View Listings</a></li>
                                 <li><a class="dropdown-item" href="{% url 'earning' %}">View Earning</a></li>
                                 {% endif %}
 

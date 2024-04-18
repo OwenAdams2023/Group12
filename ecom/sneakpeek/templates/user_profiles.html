@@ -29,8 +29,10 @@
         <div class="col" style="border: 1px solid black; padding: 10px;border-right: none;">
             <b>Full Name</b>
         </div>
-        <div class="col" style="border: 1px solid black; padding: 10px;">
+        <div class="col" style="border: 1px solid black; padding: 10px;border-right: none;">
             <b>Email</b>
+        </div>
+        <div class="col" style="border: 1px solid black; padding: 10px;">
         </div>
     </div>
 
@@ -41,7 +43,11 @@
                     {{ profile.id }}
                 </div>
                 <div class="col" style="border: 1px solid black; padding: 10px;border-right: none; border-top: none">
+                {% if profile.is_staff %}
+                    Staff
+                {% else %}
                     {{ profile.userprofile.account_type }}
+                {% endif %}
                 </div>
                 <div class="col" style="border: 1px solid black; padding: 10px;border-right: none; border-top: none">
                     {{ profile.username }}
@@ -49,8 +55,17 @@
                 <div class="col" style="border: 1px solid black; padding: 10px;border-right: none; border-top: none">
                     {{ profile.first_name}} {{profile.last_name}}
                 </div>
-                <div class="col" style="border: 1px solid black; padding: 10px; border-top: none">
+                <div class="col" style="border: 1px solid black; padding: 10px; border-right: none; border-top: none">
                     {{ profile.email }}
+                </div>
+                <div class="col" style="border: 1px solid black; padding: 10px; border-top: none">
+                {% if profile.userprofile.account_type == "Buyer" %}
+                    <a href="{% url 'orderhistory' profile.id %}">View Order History</a>
+                {% elif profile.userprofile.account_type == "Seller" %}
+                    <a href="{% url 'viewlistings' profile.id %}">View Listings</a>
+                {% else %}
+                    
+                {% endif %}
                 </div>
             </div>
 
