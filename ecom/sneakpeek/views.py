@@ -10,7 +10,7 @@ from .models import UserProfile, Category, Product, Order, OrderItem, ReturnRequ
 import json
 from django.http import JsonResponse
 from cart.cart import Cart
-from django.db.models import Q
+from django.db.models import Q, Func, F
 
 # Create your views here.
 
@@ -20,7 +20,7 @@ def home(request):
     if request.user.is_authenticated:
         current_user = request.user
 
-    products = Product.objects.filter(approved=True)
+    products = Product.objects.filter(approved=True).order_by('description')
 
     return render(request, "home.html", {'products':products})
 
